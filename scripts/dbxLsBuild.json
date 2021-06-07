@@ -1,0 +1,28 @@
+{
+  "name": "lsDataBricks1",
+  "properties": {
+    "annotations": [],
+    "type": "AzureDatabricks",
+    "typeProperties": {
+      "domain": "https://adb-841836083790816.16.azuredatabricks.net",
+      "accessToken": {
+        "type": "AzureKeyVaultSecret",
+        "store": {
+          "referenceName": "lsADFKeyVault",
+          "type": "LinkedServiceReference"
+        },
+        "secretName": "AZURE-DATABRICKS-PAT"
+      },
+      "instancePoolId": "0910-212450-pulse467-pool-qbVah1qc",
+      "newClusterNumOfWorker": "4:64",
+      "newClusterSparkEnvVars": {
+        "PYSPARK_PYTHON": "/databricks/python3/bin/python3"
+      },
+      "newClusterVersion": "7.0.x-scala2.12"
+    },
+    "connectVia": {
+      "referenceName": "dmp-adf-runway-build-001",
+      "type": "IntegrationRuntimeReference"
+    }
+  }
+}

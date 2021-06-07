@@ -1,0 +1,46 @@
+trigger: none
+
+pool:
+  name: 'Core Engineering'
+    
+stages:
+- stage:  Build
+  displayName : Build
+  jobs:
+  - deployment:
+    displayName: 'Functionapp vnet list'
+    environment: Build_Env
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - task: AzureCLI@2
+            displayName: 'Functionapp vnet list'
+            inputs:
+              azureSubscription: svc-5839-dmp-runway-build-d
+              addSpnToEnvironment: true
+              scriptType: bash
+              scriptLocation: inlineScript
+              inlineScript: |
+                az functionapp vnet-integration list --name dmp-fnapp-runway-build-001 --resource-group rg-DMPEnterpriseDataIngestion-build-001
+- stage:  Prod
+  displayName : Prod
+  dependsOn: Build
+  condition: succeeded()
+  jobs:
+  - deployment:
+    displayName: 'Functionapp vnet list'
+    environment: Prod
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - task: AzureCLI@2
+            displayName: 'Functionapp vnet list'
+            inputs:
+              azureSubscription: svc-5839-dmp-runway-build-p
+              addSpnToEnvironment: true
+              scriptType: bash
+              scriptLocation: inlineScript
+              inlineScript: |
+                az functionapp vnet-integration list --name dmp-fnapp-runway-prod-001 --resource-group rg-DMPEnterpriseDataIngestion-prod-001

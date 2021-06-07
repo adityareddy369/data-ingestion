@@ -1,0 +1,76 @@
+{
+	"dmp-sql-runway-dev-001": {
+		"KeyVaultName": "dmp-kv-runway-dev-001",
+		"SecretName": "AZURE-SQL-SERVER-PASSWORD",
+		"SqlServerAdminName": "admin-sql-admin-dev-001",
+		"ResourceGroupName": "rg-DMPEnterpriseDataIngestion-dev-001",
+		"Databases": {
+			"dmp-sqldb-runway-configuration": {
+				"DBRoles": [],
+				"Users": {
+					"gAD5839configdatareaderD": {
+						"ObjectId": "e2361025-4c84-462c-a1a8-2e8d0ce61938",
+						"UserType": "ad_group",
+						"Role": [
+							"db_datareader"
+						],
+						"ResetFlag": "false"
+					},
+					"gAD5839configdatawriterD": {
+						"ObjectId": "f802e36a-362f-47e0-89ca-9df205afee3e",
+						"UserType": "ad_group",
+						"Role": [
+							"db_datawriter"
+						],
+						"ResetFlag": "false"
+					},
+					"gAD5839configdbownerD": {
+						"ObjectId": "88ad5989-fac3-47d0-b394-0d6e4e91bc63",
+						"UserType": "ad_group",
+						"Role": [
+							"db_owner"
+						],
+						"ResetFlag": "false"
+					}
+				}
+			}
+		}
+	},
+	"dmp-sql-metastore-dev-001": {
+		"KeyVaultName": "dmp-kv-runway-dev-001",
+		"SecretName": "DATALAKE-AZURE-SQL-SERVER-PASSWORD",
+		"SqlServerAdminName": "admin-sql-admin-dev-001",
+		"ResourceGroupName": "rg-DMPEnterpriseDataLake-dev-001",
+		"Databases": {
+			"DMP_Hive_Metastore": {
+				"DBRoles": [],
+				"Users": {
+					"gad5839hivemetareaderd": {
+						"ObjectId": "54c5d26a-8d3a-4f60-acba-d05347fa19c1",
+						"UserType": "ad_group",
+						"Role": [
+							"db_datareader"
+						],
+						"ResetFlag": "false"
+					},
+					"gad5839hivemetawriterd": {
+						"ObjectId": "44a1efbf-f3e9-4396-96f4-1d3090efc0d6",
+						"UserType": "ad_group",
+						"Role": [
+							"db_datawriter"
+						],
+						"ResetFlag": "false"
+					},
+					"gad5839hivemetaownerd": {
+						"ObjectId": "3330b106-315a-4480-80c9-5b43721b5157",
+						"UserType": "ad_group",
+						"Role": [
+							"db_owner"
+						],
+						"ResetFlag": "false"
+					}
+				}
+			}
+		}
+	}
+}

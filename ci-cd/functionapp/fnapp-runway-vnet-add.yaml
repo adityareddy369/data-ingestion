@@ -1,0 +1,57 @@
+trigger: none
+
+pool:
+  name: 'Core Engineering'
+    
+stages:
+- stage:  Build
+  displayName : Build
+  jobs:
+  - deployment:
+    displayName: 'Functionapp vnet add'
+    environment: Build_Env
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - task: AzureCLI@2
+            displayName: 'Functionapp vnet add'
+            inputs:
+              azureSubscription: svc-5839-dmp-runway-build-d
+              addSpnToEnvironment: true
+              scriptType: bash
+              scriptLocation: inlineScript
+              inlineScript: |
+                az functionapp stop --id /subscriptions/60b60000-6cbd-4c1b-94b3-2440bd6bbe00/resourceGroups/rg-DMPEnterpriseDataIngestion-build-001/providers/Microsoft.Web/sites/dmp-fnapp-runway-build-001
+                az functionapp vnet-integration list --name dmp-fnapp-runway-build-001 --resource-group rg-DMPEnterpriseDataIngestion-build-001
+                echo '---------- Adding VNet ----------'
+                az functionapp vnet-integration add --name dmp-fnapp-runway-build-001 --resource-group rg-DMPEnterpriseDataIngestion-build-001 --vnet dmpnonprod-eastus2-vnet --subnet dmp-runway-build-nonprod-eastus2
+                echo '---------- VNet added ----------'
+                az functionapp vnet-integration list --name dmp-fnapp-runway-build-001 --resource-group rg-DMPEnterpriseDataIngestion-build-001
+- stage:  Prod
+  displayName : Prod
+  dependsOn: Build
+  condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))
+  jobs:
+  - deployment:
+    displayName: 'Functionapp vnet add'
+    environment: Prod
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - task: AzureCLI@2
+            displayName: 'Functionapp vnet add'
+            inputs:
+              azureSubscription: svc-5839-dmp-runway-build-p
+              addSpnToEnvironment: true
+              scriptType: bash
+              scriptLocation: inlineScript
+              inlineScript: |
+                az functionapp stop --id /subscriptions/d4ed766d-813e-4037-b448-2d1dd7ef81f6/resourceGroups/rg-DMPEnterpriseDataIngestion-prod-001/providers/Microsoft.Web/sites/dmp-fnapp-runway-prod-001
+                az functionapp vnet-integration list --name dmp-fnapp-runway-prod-001 --resource-group rg-DMPEnterpriseDataIngestion-prod-001
+                echo '---------- Adding VNet ----------'
+                az functionapp vnet-integration add --name dmp-fnapp-runway-prod-001 --resource-group rg-DMPEnterpriseDataIngestion-prod-001 --vnet dmpprod-eastus2-vnet --subnet dmp-runway-prod-prod-eastus2
+                echo '---------- VNet added ----------'
+                az functionapp vnet-integration list --name dmp-fnapp-runway-prod-001 --resource-group rg-DMPEnterpriseDataIngestion-prod-001
+

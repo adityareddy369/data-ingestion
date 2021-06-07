@@ -1,0 +1,90 @@
+# File: vars.yml
+variables:
+  # Shared
+  Config_DB: 'dmp-sqldb-runway-configuration'
+  Config_Sql_SecretKey_Name: 'AZURE-SQL-SERVER-PASSWORD'
+  Metastore_DB: 'DMP_Hive_Metastore'
+  Metastore_Sql_SecretKey_Name: 'DATALAKE-AZURE-SQL-SERVER-PASSWORD'
+  Config_User_Roles: "db_datareader,db_datawriter"
+  Metastore_User_Roles: "db_owner"
+  messageBody: '{
+    "@type":"MessageCard",
+    "@context":"http://schema.org/extensions",
+    "themeColor":"0076D7",
+    "summary":"Webhook to send message to team channel",
+    "sections":[
+    {
+    "activityTitle":"Successful Pipeline Run",
+    "facts":[
+      {
+      "name":"Repository Name",
+      "value":"$(Build.Repository.Name) "
+      },
+      {
+      "name":"Branch Name",
+      "value":"$(Build.SourceBranchName) "
+      },
+      {
+      "name":"Run By",
+      "value":"$(Build.RequestedFor) "
+      },
+      {
+      "name":"Last Commit Details",
+      "value":"$(Build.SourceVersionMessage)"
+      }
+      ],
+      "markdown":"true"
+      }
+      ],
+      "title":"pipeline DMP $(Build.DefinitionName) completed in '
+
+  # Build
+  Build_SqlServer_UserName: 'admin-sql-admin-build-001'
+  Build_KeyVault_Name: 'dmp-kv-runway-build-001'
+  Build_Config_ResourceGroup_Name: 'rg-DMPEnterpriseDataIngestion-build-001'
+  Build_Config_SqlServer_Name: 'dmp-sql-runway-build-001'
+  Build_Config_User_list: "{ 'dmp-fnapp-runway-build-001-sql-configdb-username' = 'dmp-fnapp-runway-build-001-sql-configdb-password'}"
+  Build_Metastore_ResourceGroup_Name: 'rg-DMPEnterpriseDataLake-build-001'
+  Build_Metastore_SqlServer_Name: 'dmp-sql-metastore-build-001'
+  Build_Metastore_User_list: "{ 'AZURE-SQL-SERVER-HIVE-METASTORE-USER' = 'AZURE-SQL-SERVER-HIVE-METASTORE-PASSWORD'}"
+
+  # Dev
+  Dev_SqlServer_UserName: 'admin-sql-admin-dev-001'
+  Dev_KeyVault_Name: 'dmp-kv-runway-dev-001'
+  Dev_Config_ResourceGroup_Name: 'rg-DMPEnterpriseDataIngestion-dev-001'
+  Dev_Config_SqlServer_Name: 'dmp-sql-runway-dev-001'
+  Dev_Config_User_list: "{ 'dmp-fnapp-runway-dev-001-sql-configdb-username' = 'dmp-fnapp-runway-dev-001-sql-configdb-password'}"
+  Dev_Metastore_ResourceGroup_Name: 'rg-DMPEnterpriseDataLake-dev-001'
+  Dev_Metastore_SqlServer_Name: 'dmp-sql-metastore-dev-001'
+  Dev_Metastore_User_list: "{ 'AZURE-SQL-SERVER-HIVE-METASTORE-USER' = 'AZURE-SQL-SERVER-HIVE-METASTORE-PASSWORD'}"
+
+  # Test
+  Test_SqlServer_UserName: 'admin-sql-admin-test-001'
+  Test_KeyVault_Name: 'dmp-kv-runway-test-001'
+  Test_Config_ResourceGroup_Name: 'rg-DMPEnterpriseDataIngestion-test-001'
+  Test_Config_SqlServer_Name: 'dmp-sql-runway-test-001'
+  Test_Config_User_list: "{ 'dmp-fnapp-runway-test-001-sql-configdb-username' = 'dmp-fnapp-runway-test-001-sql-configdb-password'}"
+  Test_Metastore_ResourceGroup_Name: 'rg-DMPEnterpriseDataLake-test-001'
+  Test_Metastore_SqlServer_Name: 'dmp-sql-metastore-test-001'
+  Test_Metastore_User_list: "{ 'AZURE-SQL-SERVER-HIVE-METASTORE-USER' = 'AZURE-SQL-SERVER-HIVE-METASTORE-PASSWORD'}"
+
+  # Stage
+  Stage_SqlServer_UserName: 'admin-sql-admin-stage-001'
+  Stage_KeyVault_Name: 'dmp-kv-runway-stage-001'
+  Stage_Config_ResourceGroup_Name: 'rg-DMPEnterpriseDataIngestion-stage-001'
+  Stage_Config_SqlServer_Name: 'dmp-sql-runway-stage-001'
+  Stage_Config_User_list: "{ 'dmp-fnapp-runway-stage-001-sql-configdb-username' = 'dmp-fnapp-runway-stage-001-sql-configdb-password'}"
+  Stage_Metastore_ResourceGroup_Name: 'rg-DMPEnterpriseDataLake-stage-001'
+  Stage_Metastore_SqlServer_Name: 'dmp-sql-metastore-stage-001'
+  Stage_Metastore_User_list: "{ 'AZURE-SQL-SERVER-HIVE-METASTORE-USER' = 'AZURE-SQL-SERVER-HIVE-METASTORE-PASSWORD'}"
+
+  # Prod
+  Prod_SqlServer_UserName: 'admin-sql-admin-prod-001'
+  Prod_KeyVault_Name: 'dmp-kv-runway-prod-001'
+  Prod_Config_ResourceGroup_Name: 'rg-DMPEnterpriseDataIngestion-prod-001'
+  Prod_Config_SqlServer_Name: 'dmp-sql-runway-prod-001'
+  Prod_Config_User_list: "{ 'dmp-fnapp-runway-prod-001-sql-configdb-username' = 'dmp-fnapp-runway-prod-001-sql-configdb-password'}"
+  Prod_Metastore_ResourceGroup_Name: 'rg-DMPEnterpriseDataLake-prod-001'
+  Prod_Metastore_SqlServer_Name: 'dmp-sql-metastore-prod-001'
+  Prod_Metastore_User_list: "{ 'AZURE-SQL-SERVER-HIVE-METASTORE-USER' = 'AZURE-SQL-SERVER-HIVE-METASTORE-PASSWORD'}"
+  

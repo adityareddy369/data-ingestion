@@ -1,0 +1,446 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"dmp_logicapp_name": {
+			"type": "String"
+		},
+		"dmp_adf_url": {
+			"type": "String"
+		},
+		"past_interval_hour": {
+			"type": "String"
+		},
+		"recurrence_interval_minutes": {
+			"type": "String"
+		},
+		"dmp_webhook_url": {
+			"type": "String"
+		},
+		"dmp_location": {
+			"type": "String"
+		},
+		"bug_bypass_unused_parm": {
+			"type": "String"
+		}
+	},
+	"variables": {},
+	"resources": [{
+			"type": "Microsoft.Logic/workflows",
+			"apiVersion": "2017-07-01",
+			"name": "[parameters('dmp_logicapp_name')]",
+			"location": "[parameters('dmp_location')]",
+			"identity": {
+				"type": "SystemAssigned"
+			},
+			"properties": {
+				"state": "Enabled",
+				"definition": {
+					"$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+					"contentVersion": "1.0.0.0",
+					"parameters": {
+						"la_adf_url": {
+							"type": "String"
+						},
+						"la_past_interval": {
+							"type": "String"
+						},
+						"la_recurrence_interval_minutes": {
+							"type": "String"
+						},
+						"la_webhook_url": {
+							"type": "String"
+						}
+					},
+					"triggers": {
+						"Recurrence": {
+							"recurrence": {
+								"frequency": "Minute",
+								"interval": "@int(parameters('la_recurrence_interval_minutes'))"
+							},
+							"type": "Recurrence"
+						}
+					},
+					"actions": {
+						"Condition_2": {
+							"actions": {
+								"Compose_message": {
+									"runAfter": {},
+									"type": "Compose",
+									"inputs": {
+										"description": "DMP LONG RUNNING PIPELINE RUN:\n @{variables('string_append')}",
+										"host": "DMP_ADF_RUNWAY_PIPELINE_HUNG_JOBS (InProgress)",
+										"index": "@concat('2b575356-7000-11eb-9439-',string(ticks(body('Current_time'))))"
+									}
+								},
+								"HTTP_webhook": {
+									"runAfter": {
+										"Compose_message": [
+											"Succeeded"
+										]
+									},
+									"type": "Http",
+									"inputs": {
+										"body": "@outputs('Compose_message')",
+										"method": "POST",
+										"uri": "@parameters('la_webhook_url')"
+									}
+								}
+							},
+							"runAfter": {
+								"For_each": [
+									"Succeeded",
+									"Failed",
+									"Skipped",
+									"TimedOut"
+								]
+							},
+							"expression": {
+								"and": [{
+									"greater": [
+										"@length(variables('string_append'))",
+										3
+									]
+								}]
+							},
+							"type": "If"
+						},
+						"Current_time": {
+							"runAfter": {
+								"string_append": [
+									"Succeeded",
+									"Failed",
+									"Skipped"
+								]
+							},
+							"type": "Expression",
+							"kind": "CurrentTime",
+							"inputs": {}
+						},
+						"For_each": {
+							"foreach": "@body('Parse_JSON')?['value']",
+							"actions": {
+                                "Add_to_time": {
+                                    "runAfter": {},
+                                    "type": "Expression",
+                                    "kind": "AddToTime",
+                                    "inputs": {
+                                        "baseTime": "@items('For_each')?['runStart']",
+                                        "interval": "@parameters('la_past_interval')",
+                                        "timeUnit": "Hour"
+                                    }
+                                },
+                                "Debug_compose": {
+                                    "runAfter": {
+                                        "Add_to_time": [
+                                            "Succeeded",
+                                            "Failed",
+                                            "Skipped",
+                                            "TimedOut"
+                                        ]
+                                    },
+                                    "type": "Compose",
+                                    "inputs": {
+                                        "calculated_time": "@body('Add_to_time')",
+                                        "current_time": "@body('Current_time')",
+                                        "duration_ticks": "@{div(div(mul(sub(ticks(body('Current_time')),ticks(items('For_each')?['runStart'])),100),1000000000),3600)} hr",
+                                        "pipelineName": "@items('For_each')?['pipelineName']"
+                                    }
+                                },
+								"Scope": {
+									"actions": {
+										"Condition": {
+											"actions": {
+												"Append_to_string_variable": {
+													"runAfter": {
+														"Parse_JSON_2": [
+															"Succeeded"
+														]
+													},
+													"type": "AppendToStringVariable",
+													"inputs": {
+														"name": "string_append",
+														"value": "@{body('Parse_JSON_2')?['pipelineName']}, duration: @{div(div(mul(sub(ticks(body('Current_time')),ticks(body('Parse_JSON_2')?['runStart'])),100),1000000000),3600)}hr |\n"
+													}
+												},
+												"Parse_JSON_2": {
+													"runAfter": {},
+													"type": "ParseJson",
+													"inputs": {
+														"content": "@items('For_each')",
+														"schema": {
+															"properties": {
+																"annotations": {
+																	"type": "array"
+																},
+																"debugRunId": {},
+																"durationInMs": {},
+																"id": {
+																	"type": "string"
+																},
+																"invokedBy": {
+																	"properties": {
+																		"id": {
+																			"type": "string"
+																		},
+																		"invokedByType": {
+																			"type": "string"
+																		},
+																		"name": {
+																			"type": "string"
+																		}
+																	},
+																	"type": "object"
+																},
+																"isLatest": {
+																	"type": "boolean"
+																},
+																"lastUpdated": {
+																	"type": "string"
+																},
+																"message": {
+																	"type": "string"
+																},
+																"parameters": {
+																	"properties": {},
+																	"type": "object"
+																},
+																"pipelineName": {
+																	"type": "string"
+																},
+																"runDimension": {
+																	"properties": {},
+																	"type": "object"
+																},
+																"runEnd": {},
+																"runGroupId": {
+																	"type": "string"
+																},
+																"runId": {
+																	"type": "string"
+																},
+																"runStart": {
+																	"type": "string"
+																},
+																"status": {
+																	"type": "string"
+																}
+															},
+															"type": "object"
+														}
+													}
+												}
+											},
+											"runAfter": {},
+											"expression": {
+												"and": [{
+													"less": [
+                                                            "@body('Add_to_time')",
+                                                            "@body('Current_time')"
+                                                        ]
+												}]
+											},
+											"type": "If"
+										}
+									},
+									"runAfter": {
+										"Debug_compose": [
+                                            "Succeeded",
+                                            "Failed",
+                                            "Skipped",
+                                            "TimedOut"
+										]
+									},
+									"type": "Scope"
+								}
+							},
+							"runAfter": {
+								"Parse_JSON": [
+									"Succeeded",
+									"Failed",
+									"Skipped",
+									"TimedOut"
+								]
+							},
+							"type": "Foreach"
+						},
+						"Parse_JSON": {
+							"runAfter": {
+								"adf_api": [
+									"Succeeded"
+								]
+							},
+							"type": "ParseJson",
+							"inputs": {
+								"content": "@body('adf_api')",
+								"schema": {
+									"properties": {
+										"value": {
+											"items": {
+												"properties": {
+													"annotations": {
+														"type": "array"
+													},
+													"debugRunId": {},
+													"durationInMs": {},
+													"id": {
+														"type": "string"
+													},
+													"invokedBy": {
+														"properties": {
+															"id": {
+																"type": "string"
+															},
+															"invokedByType": {
+																"type": "string"
+															},
+															"name": {
+																"type": "string"
+															}
+														},
+														"type": "object"
+													},
+													"isLatest": {
+														"type": "boolean"
+													},
+													"lastUpdated": {
+														"type": "string"
+													},
+													"message": {
+														"type": "string"
+													},
+													"parameters": {
+														"properties": {},
+														"type": "object"
+													},
+													"pipelineName": {
+														"type": "string"
+													},
+													"runDimension": {
+														"properties": {},
+														"type": "object"
+													},
+													"runEnd": {},
+													"runGroupId": {
+														"type": "string"
+													},
+													"runId": {
+														"type": "string"
+													},
+													"runStart": {
+														"type": "string"
+													},
+													"status": {
+														"type": "string"
+													}
+												},
+												"required": [
+													"id",
+													"runId",
+													"debugRunId",
+													"runGroupId",
+													"pipelineName",
+													"parameters",
+													"invokedBy",
+													"runStart",
+													"runEnd",
+													"durationInMs",
+													"status",
+													"message",
+													"lastUpdated",
+													"annotations",
+													"runDimension",
+													"isLatest"
+												],
+												"type": "object"
+											},
+											"type": "array"
+										}
+									},
+									"type": "object"
+								}
+							}
+						},
+						"adf_api": {
+							"runAfter": {
+								"Current_time": [
+									"Succeeded",
+									"Failed",
+									"Skipped"
+								]
+							},
+							"type": "Http",
+							"inputs": {
+								"authentication": {
+									"type": "ManagedServiceIdentity"
+								},
+								"body": {
+									"filters": [
+                                        {
+										"operand": "Status",
+										"operator": "Equals",
+										"values": [
+											"InProgress"
+										]
+									}
+                                    ],
+									"lastUpdatedAfter": "2018-06-16T00:36:44.3345758Z",
+									"lastUpdatedBefore": "@body('Current_time')"
+								},
+								"method": "POST",
+								"uri": "@parameters('la_adf_url')"
+							}
+						},
+						"start_time": {
+							"runAfter": {},
+							"type": "InitializeVariable",
+							"inputs": {
+								"variables": [{
+									"name": "start_time",
+									"type": "string"
+								}]
+							}
+						},
+						"string_append": {
+							"runAfter": {
+								"start_time": [
+									"Succeeded"
+								]
+							},
+							"type": "InitializeVariable",
+							"inputs": {
+								"variables": [{
+									"name": "string_append",
+									"type": "string"
+								}]
+							}
+						}
+					},
+					"outputs": {}
+				},
+				"parameters": {
+					"la_adf_url": {
+						"value": "[parameters('dmp_adf_url')]"
+					},
+					"la_past_interval": {
+						"value": "[parameters('past_interval_hour')]"
+					},
+					"la_recurrence_interval_minutes": {
+						"value": "[parameters('recurrence_interval_minutes')]"
+					},
+					"la_webhook_url": {
+						"value": "[parameters('dmp_webhook_url')]"
+					}
+				}
+			}
+		}
+
+	],
+	"outputs": {
+		"object_id": {
+			"type": "string",
+			"value": "[reference(resourceId('Microsoft.Logic/workflows/', parameters('dmp_logicapp_name')), '2019-05-01', 'Full').Identity.principalId]"
+
+		}
+	}
+}

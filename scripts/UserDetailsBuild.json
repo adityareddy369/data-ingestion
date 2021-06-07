@@ -1,0 +1,134 @@
+{
+	"dmp-sql-runway-build-001": {
+		"KeyVaultName": "dmp-kv-runway-build-001",
+		"SecretName": "AZURE-SQL-SERVER-PASSWORD",
+		"SqlServerAdminName": "admin-sql-admin-build-001",
+		"ResourceGroupName": "rg-DMPEnterpriseDataIngestion-build-001",
+		"Databases": {
+			"dmp-sqldb-runway-configuration": {
+				"DBRoles": [
+					"db_datareader",
+					"db_datawriter"
+				],
+				"Users": {
+					"dmp-funapp-datashare-build-001-sql-user": {
+						"UserPwdSecretName": "dmp-fnapp-runway-build-001-sql-configdb-password",
+						"UserType": "sql_user",
+						"Role": [
+							"db_datareader",
+							"db_datawriter"
+						],
+						"ResetFlag": "fales"
+					},
+					"manuj.bhatia@kroger.com": {
+						"ObjectId": "2f2d74bc-e64c-4c49-a4cc-beafb1c9977f",
+						"UserType": "ad_user",
+						"Role": [
+							"db_datareader",
+							"db_datawriter"
+						],
+						"ResetFlag": "fales"
+					},
+					"KTH buildOps and IaC": {
+						"ObjectId": "6e3c3dfe-daa1-44c3-8533-42ef556cc15e",
+						"UserType": "ad_group",
+						"Role": [
+							"db_datareader",
+							"db_datawriter"
+						],
+						"ResetFlag": "fales"
+					},
+					"desp-internal-msi-nonprod": {
+						"ObjectId": "80100c5e-b8c0-4c36-b455-d6ad2287fe61",
+						"UserType": "ad_managed_identity",
+						"Role": [
+							"db_datareader",
+							"db_datawriter"
+						],
+						"ResetFlag": "fales"
+					},
+					"azure-cli-2019-11-18-21-05-29": {
+						"ObjectId": "02f6faf5-825e-4195-abd1-4ab69413e98e",
+						"UserType": "ad_service_princial",
+						"Role": [
+							"db_datareader",
+							"db_datawriter"
+						],
+						"ResetFlag": "fales"
+					},
+					"gAD5839configdatareaderD": {
+						"ObjectId": "e2361025-4c84-462c-a1a8-2e8d0ce61938",
+						"UserType": "ad_group",
+						"Role": [
+							"db_datareader"
+						],
+						"ResetFlag": "false"
+					},
+					"gAD5839configdatawriterD": {
+						"ObjectId": "f802e36a-362f-47e0-89ca-9df205afee3e",
+						"UserType": "ad_group",
+						"Role": [
+							"db_datawriter"
+						],
+						"ResetFlag": "false"
+					},
+					"gAD5839configdbownerD": {
+						"ObjectId": "88ad5989-fac3-47d0-b394-0d6e4e91bc63",
+						"UserType": "ad_group",
+						"Role": [
+							"db_owner"
+						],
+						"ResetFlag": "false"
+					}
+				}
+			}
+		}
+	},
+	"dmp-sql-metastore-build-001": {
+		"KeyVaultName": "dmp-kv-runway-build-001",
+		"SecretName": "DATALAKE-AZURE-SQL-SERVER-PASSWORD",
+		"SqlServerAdminName": "admin-sql-admin-build-001",
+		"ResourceGroupName": "rg-DMPEnterpriseDataLake-build-001",
+		"Databases": {
+			"DMP_Hive_Metastore": {
+				"DBRoles": [
+					"db_owner"
+				],
+				"Users": {
+					"dmprunwaymetastoreadmin": {
+						"UserPwdSecretName": "AZURE-SQL-SERVER-HIVE-METASTORE-PASSWORD",
+						"UserType": "sql_user",
+						"Role": [
+							"db_owner"
+						],
+						"ResetFlag": "fales"
+					},
+					"gad5839hivemetareaderd": {
+						"ObjectId": "54c5d26a-8d3a-4f60-acba-d05347fa19c1",
+						"UserType": "ad_group",
+						"Role": [
+							"db_datareader"
+						],
+						"ResetFlag": "false"
+					},
+					"gad5839hivemetawriterd": {
+						"ObjectId": "44a1efbf-f3e9-4396-96f4-1d3090efc0d6",
+						"UserType": "ad_group",
+						"Role": [
+							"db_datawriter"
+						],
+						"ResetFlag": "false"
+					},
+					"gad5839hivemetaownerd": {
+						"ObjectId": "3330b106-315a-4480-80c9-5b43721b5157",
+						"UserType": "ad_group",
+						"Role": [
+							"db_owner"
+						],
+						"ResetFlag": "false"
+					}
+				}
+			}
+		}
+	}
+}

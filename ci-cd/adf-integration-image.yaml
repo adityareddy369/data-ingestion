@@ -1,0 +1,39 @@
+name: ADF Integration Image Creation
+
+trigger: none
+
+pool:
+  name: Core Engineering
+  vmImage: ubuntu-latest
+
+# - If this pipeline is canceled, Packer may leave behind extra resources.
+#   These can be identified by prefix "pkr..." and manually deleted
+stages:
+- template: templates/adf-integration-image-script.yaml
+  parameters:
+    environment: NonProd
+    azureSubscription: svc-5839-dmp-runway-build-d
+    vnetName: dmpnonprod-eastus2-vnet
+    subnetName: adfintegrationruntime
+    webhookConnection:
+    - webhookServiceConnection: 'Webhook-DMPARTDeployment'
+      urlSuffix: '2b371c9ea98f464982751a0e839233c7/5fc3f22c-833d-4349-8b88-e7f6bbaaf784'
+
+- template: templates/adf-integration-image-script.yaml
+  parameters:
+    environment: Prod
+    dependsOn: NonProd
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+    azureSubscription: svc-5839-dmp-runway-build-s
+    vnetName: dmpprod-eastus2-vnet
+    subnetName: adfintegrationruntime-prod-eastus2
+    webhookConnection:
+    - name: 'EnterPriseChangeManagement'
+      webhookServiceConnection: 'Webhook-ECMEnterpriseChangeLog'
+      urlSuffix: 'aff727f968ec4fc9b07676fc2522a94e/5fc3f22c-833d-4349-8b88-e7f6bbaaf784'
+    - name: 'DMPCommunity'
+      webhookServiceConnection: 'Webhook-DMPCommunityProdDeployment'
+      urlSuffix: '438d966a1f324987b2fdb67d6f540463/5fc3f22c-833d-4349-8b88-e7f6bbaaf784'
+    - name: 'DMP ART'
+      webhookServiceConnection: 'Webhook-DMPARTDeployment'
+      urlSuffix: '2b371c9ea98f464982751a0e839233c7/5fc3f22c-833d-4349-8b88-e7f6bbaaf784'

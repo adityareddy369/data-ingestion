@@ -1,0 +1,321 @@
+variables:
+  - template: vars.yml
+
+resources:
+  repositories:
+  - repository: terraform_template # Friendly name
+    type: github # Repo type
+    name: krogertechnology/azdo-pipeline-terraform-template # Repo path
+    endpoint: krogertechnology # Service Connection for GitHub Installation Token
+    ref:  refs/tags/v0.5.7
+  - repository: sql_permissions # Friendly name
+    type: github # Repo type
+    name: krogertechnology/azdo-pipeline-template-sql-permissions # Repo path
+    endpoint: krogertechnology # Service Connection for GitHub Installation Token
+    ref: refs/heads/main 
+
+
+trigger: # Runs pipelines when changes occur to a branch, generally the result of push or a merge
+
+  batch: "true" # Prevents multiple pipeline runs at the same time
+
+  # Run the pipeline every time a tag is created
+  tags:
+    include:
+    - refs/tags/*
+
+  # # Only run the pipeline after a pull request is merged to main or develop
+  # # This section should only be included if planConditional is set to true
+  # # Otherwise the plan is redundant with the plan from the pull request
+  # branches:
+  #   include:
+  #   - main
+  #   - develop
+
+  # # Only run the pipeline if the change is in a path that impacts terraform
+  # # This section should only be included if planConditional is set to true
+  # # Otherwise the plan is redundant with the plan from the pull request
+  # paths:
+  #   include:
+  #   - terraform
+  #   - ci-cd
+
+pr: # Runs pipelines when pull requests are created
+
+  # Only run the pipeline if the target branch of the pull request is main or develop
+  branches:
+    include:
+    - main
+    - develop
+
+  # Only run the pipeline if the change is in a path that impacts terraform
+  paths:
+    include:
+    - terraform
+    - ci-cd
+
+
+pool:
+  name: 'Core Engineering'
+
+stages:
+- template: terraform-pipeline.yml@terraform_template
+  parameters:
+    armServiceConnection: 'svc-5839-dmp-runway-build-d' # Service Connection for azure subscription/resource group
+    workingDirectory: './terraform'
+    backendArmServiceConnection: 'svc-5839-dmp-runway-build-d' # Service Connection for TF backend
+    backendAzureRmResourceGroupName: 'terraform'
+    backendAzureRmStorageAccountName: 'dmptfstate1'
+    backendAzureRmContainerName: 'tfstate'
+    backendAzureRmKey: '$(Build.DefinitionName)-build.terraform.tfstate'
+    terraformVersion: '0.14.11'
+    environments:
+    
+    - name: 'Build_Env'
+      displayName: 'Terraform DMP Build'
+      armServiceConnection: 'svc-5839-dmp-runway-build-d'
+      backendArmServiceConnection: 'svc-5839-dmp-runway-build-d'
+      backendAzureRmKey: '$(Build.DefinitionName)-build.terraform.tfstate'
+      backendAzureRmContainerName: 'tfstate'
+      backendAzureRmStorageAccountName: 'dmptfstate1'
+      artifactName: 'BuildPlan'
+      varsFile: './variables/build.tfvars'
+      artifactDirectory: $(System.DefaultWorkingDirectory)
+      postApplySteps:
+      - checkout: self
+        path: s 
+        # This is important, because when checking out multiple repos,
+        # if you don't set the path, the source
+        # code will be move to a subfolder named after the repo instead of 
+        # the usual $(Build.SourcesDirectory) 
+      - checkout: sql_permissions        
+      - template: sql-permissions-deploy.yaml@sql_permissions
+        parameters:
+          azureSubscription: 'svc-5839-dmp-runway-build-d' # Service Connection for azure subscription/resource group
+          environmentName: 'Build_Env'
+          scriptPath: 'azdo-pipeline-template-sql-permissions/scripts/Create-SqlUser.ps1'
+          JsonFilePath: './scripts/UserDetailsBuild.json'
+          artifactDirectory: $(System.DefaultWorkingDirectory)
+          
+      - task: AzureCLI@2
+        displayName: Configure SQL Server Audit 
+        inputs:
+          azureSubscription: 'svc-5839-dmp-runway-build-d'
+          scriptType: 'bash'
+          scriptLocation: 'inlineScript'
+          inlineScript: |
+            az sql server audit-policy update \
+            -g rg-DMPEnterpriseDataIngestion-build-001 \
+            -n dmp-sql-runway-build-001 \
+            --state Enabled \
+            --lats Enabled \
+            --lawri "/subscriptions/60b60000-6cbd-4c1b-94b3-2440bd6bbe00/resourcegroups/rg-dmpenterprisedataingestion-build-001/providers/microsoft.operationalinsights/workspaces/dmp-la-runway-build-001"
+      
+      webhookConnection:
+      - name: 'DMP ART'
+        webhookServiceConnection: 'Webhook-DMPARTDeployment'
+        messageBody: '' 
+        urlSuffix: '2b371c9ea98f464982751a0e839233c7/5fc3f22c-833d-4349-8b88-e7f6bbaaf784'
+
+    - name: 'Dev'
+      displayName: 'Terraform DMP Dev'
+      armServiceConnection: 'svc-5839-dmp-runway-build-d'
+      backendArmServiceConnection: 'svc-5839-dmp-runway-build-d'
+      backendAzureRmKey: '$(Build.DefinitionName)-dev.terraform.tfstate'
+      backendAzureRmContainerName: 'tfstate'
+      backendAzureRmStorageAccountName: 'dmptfstate1'
+      artifactName: 'DevPlan'
+      varsFile: './variables/dev.tfvars'
+      artifactDirectory: $(System.DefaultWorkingDirectory)
+      planConditional: false
+      condition: or(or(and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/develop')), and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))), and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/')))
+
+      postApplySteps:
+      - checkout: self
+        path: s 
+        # This is important, because when checking out multiple repos,
+        # if you don't set the path, the source
+        # code will be move to a subfolder named after the repo instead of 
+        # the usual $(Build.SourcesDirectory) 
+      - checkout: sql_permissions        
+      - template: sql-permissions-deploy.yaml@sql_permissions
+        parameters:
+          azureSubscription: 'svc-5839-dmp-runway-build-d' # Service Connection for azure subscription/resource group
+          environmentName: 'Dev'
+          scriptPath: 'azdo-pipeline-template-sql-permissions/scripts/Create-SqlUser.ps1'
+          JsonFilePath: './scripts/UserDetailsDev.json'
+          artifactDirectory: $(System.DefaultWorkingDirectory)
+      - task: AzureCLI@2
+        displayName: Configure SQL Server Audit 
+        inputs:
+          azureSubscription: 'svc-5839-dmp-runway-build-d'
+          scriptType: 'bash'
+          scriptLocation: 'inlineScript'
+          inlineScript: |
+            az sql server audit-policy update \
+            -g rg-DMPEnterpriseDataIngestion-dev-001 \
+            -n dmp-sql-runway-dev-001 \
+            --state Enabled \
+            --lats Enabled \
+            --lawri "/subscriptions/60b60000-6cbd-4c1b-94b3-2440bd6bbe00/resourcegroups/rg-dmpenterprisedataingestion-dev-001/providers/microsoft.operationalinsights/workspaces/dmp-la-runway-dev-001"
+      
+      webhookConnection:
+      - name: 'DMP ART'
+        webhookServiceConnection: 'Webhook-DMPARTDeployment'
+        messageBody: '' 
+        urlSuffix: '2b371c9ea98f464982751a0e839233c7/5fc3f22c-833d-4349-8b88-e7f6bbaaf784'
+
+    - name: 'Test'
+      displayName: 'Terraform DMP Test'
+      armServiceConnection: 'svc-5839-dmp-runway-build-t'
+      backendArmServiceConnection: 'svc-5839-dmp-runway-build-t'
+      backendAzureRmContainerName: 'tfstate'
+      backendAzureRmStorageAccountName: 'dmptfstate1'
+      backendAzureRmKey: '$(Build.DefinitionName)-test.terraform.tfstate'
+      artifactName: 'TestPlan'
+      varsFile: './variables/test.tfvars'
+      artifactDirectory: $(System.DefaultWorkingDirectory)
+      planConditional: false
+      condition: or(and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main')), and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/')))
+
+      postApplySteps:
+      - checkout: self
+        path: s 
+        # This is important, because when checking out multiple repos,
+        # if you don't set the path, the source
+        # code will be move to a subfolder named after the repo instead of 
+        # the usual $(Build.SourcesDirectory) 
+      - checkout: sql_permissions        
+      - template: sql-permissions-deploy.yaml@sql_permissions
+        parameters:
+          azureSubscription: 'svc-5839-dmp-runway-build-t' # Service Connection for azure subscription/resource group
+          environmentName: 'Test'
+          scriptPath: 'azdo-pipeline-template-sql-permissions/scripts/Create-SqlUser.ps1'
+          JsonFilePath: './scripts/UserDetailsTest.json'
+          artifactDirectory: $(System.DefaultWorkingDirectory)
+          
+      - task: AzureCLI@2
+        displayName: Configure SQL Server Audit
+        inputs:
+          azureSubscription: 'svc-5839-dmp-runway-build-t'
+          scriptType: 'bash'
+          scriptLocation: 'inlineScript'
+          inlineScript: |
+            az sql server audit-policy update \
+            -g rg-DMPEnterpriseDataIngestion-test-001 \
+            -n dmp-sql-runway-test-001 \
+            --state Enabled \
+            --lats Enabled \
+            --lawri "/subscriptions/60b60000-6cbd-4c1b-94b3-2440bd6bbe00/resourcegroups/rg-dmpenterprisedataingestion-test-001/providers/microsoft.operationalinsights/workspaces/dmp-la-runway-test-001"
+      
+      webhookConnection:
+      - name: 'DMP ART'
+        webhookServiceConnection: 'Webhook-DMPARTDeployment'
+        messageBody: '' 
+        urlSuffix: '2b371c9ea98f464982751a0e839233c7/5fc3f22c-833d-4349-8b88-e7f6bbaaf784'
+
+    - name: 'Stage'
+      displayName: 'Terraform DMP Stage'
+      armServiceConnection: 'svc-5839-dmp-runway-build-s'
+      backendArmServiceConnection: 'svc-5839-dmp-runway-build-s'
+      backendAzureRmResourceGroupName: 'terraform'
+      backendAzureRmStorageAccountName: 'dmptfstate2'
+      backendAzureRmContainerName: 'tfstate'
+      backendAzureRmKey: '$(Build.DefinitionName)-stage.terraform.tfstate'
+      artifactName: 'StagePlan'
+      varsFile: './variables/stage.tfvars'
+      artifactDirectory: $(System.DefaultWorkingDirectory)
+      planConditional: false
+      condition: or(and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main')), and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/')))
+
+      postApplySteps:
+      - checkout: self
+        path: s 
+        # This is important, because when checking out multiple repos,
+        # if you don't set the path, the source
+        # code will be move to a subfolder named after the repo instead of 
+        # the usual $(Build.SourcesDirectory) 
+      - checkout: sql_permissions        
+      - template: sql-permissions-deploy.yaml@sql_permissions
+        parameters:
+          azureSubscription: 'svc-5839-dmp-runway-build-s' # Service Connection for azure subscription/resource group
+          environmentName: 'Stage'
+          scriptPath: 'azdo-pipeline-template-sql-permissions/scripts/Create-SqlUser.ps1'
+          JsonFilePath: './scripts/UserDetailsStage.json'
+          artifactDirectory: $(System.DefaultWorkingDirectory)
+      - task: AzureCLI@2
+        displayName: Configure SQL Server Audit
+        inputs:
+          azureSubscription: 'svc-5839-dmp-runway-build-s'
+          scriptType: 'bash'
+          scriptLocation: 'inlineScript'
+          inlineScript: |
+            az sql server audit-policy update \
+            -g rg-DMPEnterpriseDataIngestion-stage-001 \
+            -n dmp-sql-runway-stage-001 \
+            --state Enabled \
+            --lats Enabled \
+            --lawri "/subscriptions/d4ed766d-813e-4037-b448-2d1dd7ef81f6/resourcegroups/rg-dmpenterprisedataingestion-stage-001/providers/microsoft.operationalinsights/workspaces/dmp-la-runway-stage-001"
+      
+      webhookConnection:
+      - name: 'DMP ART'
+        webhookServiceConnection: 'Webhook-DMPARTDeployment'
+        messageBody: '' 
+        urlSuffix: '2b371c9ea98f464982751a0e839233c7/5fc3f22c-833d-4349-8b88-e7f6bbaaf784'
+
+    - name: 'Prod'
+      displayName: 'DMP Foundation Terraform Prod'
+      armServiceConnection: 'svc-5839-dmp-runway-build-p' # Service Connection for azure subscription/resource group
+      backendArmServiceConnection: 'svc-5839-dmp-runway-build-p' # Service Connection for TF backend
+      backendAzureRmResourceGroupName: 'terraform'
+      backendAzureRmStorageAccountName: 'dmptfstate2'
+      backendAzureRmContainerName: 'tfstate'
+      backendAzureRmKey: '$(Build.DefinitionName)-prod.terraform.tfstate'
+      artifactName: 'ProdPlan'
+      varsFile: './variables/prod.tfvars'
+      artifactDirectory: $(System.DefaultWorkingDirectory)
+      planConditional: false
+      condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))
+
+      postApplySteps:
+      - checkout: self
+        path: s 
+        # This is important, because when checking out multiple repos,
+        # if you don't set the path, the source
+        # code will be move to a subfolder named after the repo instead of 
+        # the usual $(Build.SourcesDirectory) 
+      - checkout: sql_permissions        
+      - template: sql-permissions-deploy.yaml@sql_permissions
+        parameters:
+          azureSubscription: 'svc-5839-dmp-runway-build-p' # Service Connection for azure subscription/resource group
+          environmentName: 'Prod'
+          scriptPath: 'azdo-pipeline-template-sql-permissions/scripts/Create-SqlUser.ps1'
+          JsonFilePath: './scripts/UserDetailsProd.json'
+          artifactDirectory: $(System.DefaultWorkingDirectory)
+      - task: AzureCLI@2
+        displayName: Configure SQL Server Audit
+        inputs:
+          azureSubscription: 'svc-5839-dmp-runway-build-p'
+          scriptType: 'bash'
+          scriptLocation: 'inlineScript'
+          inlineScript: |
+            az sql server audit-policy update \
+            -g rg-DMPEnterpriseDataIngestion-prod-001 \
+            -n dmp-sql-runway-prod-001 \
+            --state Enabled \
+            --lats Enabled \
+            --lawri "/subscriptions/d4ed766d-813e-4037-b448-2d1dd7ef81f6/resourcegroups/rg-dmpenterprisedataingestion-prod-001/providers/microsoft.operationalinsights/workspaces/dmp-la-runway-prod-001"
+      
+      webhookConnection:
+      - name: 'EnterPriseChangeManagement'
+        webhookServiceConnection: 'Webhook-ECMEnterpriseChangeLog'
+        messageBody: '' 
+        urlSuffix: 'aff727f968ec4fc9b07676fc2522a94e/5fc3f22c-833d-4349-8b88-e7f6bbaaf784'
+      - name: 'DMPCommunity'
+        webhookServiceConnection: 'Webhook-DMPCommunityProdDeployment'
+        messageBody: '' 
+        urlSuffix: '438d966a1f324987b2fdb67d6f540463/5fc3f22c-833d-4349-8b88-e7f6bbaaf784'
+      - name: 'DMP ART'
+        webhookServiceConnection: 'Webhook-DMPARTDeployment'
+        messageBody: '' 
+        urlSuffix: '2b371c9ea98f464982751a0e839233c7/5fc3f22c-833d-4349-8b88-e7f6bbaaf784'

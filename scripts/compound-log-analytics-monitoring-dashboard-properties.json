@@ -1,0 +1,3450 @@
+{
+       "lenses": {
+      "0": {
+        "order": 0,
+        "parts": {
+          "0": {
+            "position": {
+              "x": 0,
+              "y": 0,
+              "colSpan": 2,
+              "rowSpan": 4
+            },
+            "metadata": {
+              "inputs": [],
+              "type": "Extension/HubsExtension/PartType/MarkdownPart",
+              "settings": {
+                "content": {
+                  "settings": {
+                    "content": "<br><br>\n<strong><em>Azure\nSQL Database</em></storng>\n<br><br>\nSQL Server\n<br>\n<a href='https://portal.azure.com/#@${tenant_id}/resource/subscriptions/${subscription_id}/resourceGroups/${ingest_resource_group_name}/providers/Microsoft.Sql/servers/${runway_sql_server_name}/overview' target='_blank'>${runway_sql_server_name}\n</a><br>\n<a href='https://portal.azure.com/#@${tenant_id}/resource/subscriptions/${subscription_id}/resourceGroups/${datalake_resource_group_name}/providers/Microsoft.Sql/servers/${runway_metastore_sql_server_name}/overview' target='_blank'>${runway_metastore_sql_server_name}</a><br>\n<strong>SQL Database</strong>\n<br><a href='https://portal.azure.com/#@${tenant_id}/resource/subscriptions/${subscription_id}/resourceGroups/${ingest_resource_group_name}/providers/Microsoft.Sql/servers/${runway_sql_server_name}/databases/${dmp_runway_config_sql_db_name}/overview' target='_blank'>${dmp_runway_config_sql_db_name}</a>\n<br><a href='https://portal.azure.com/#@${tenant_id}/resource/subscriptions/${subscription_id}/resourceGroups/${datalake_resource_group_name}/providers/Microsoft.Sql/servers/${runway_metastore_sql_server_name}/databases/DMP_Hive_Metastore/overview' target='_blank'>DMP_HIVE_METASTORE</a>\n<br><br>\n<a href = 'https://portal.azure.com/#@${tenant_id}/resource/subscriptions/${subscription_id}/resourceGroups/${ingest_resource_group_name}/providers/Microsoft.Sql/servers/${runway_sql_server_name}/databases/${dmp_runway_config_sql_db_name}/analytics' target='_blank'>Log Analytics Link with SQL Database </a>\n<br>\n<a href = 'https://portal.azure.com/#@${tenant_id}/resource/subscriptions/${subscription_id}/resourceGroups/${datalake_resource_group_name}/providers/Microsoft.Sql/servers/${runway_metastore_sql_server_name}/databases/DMP_Hive_Metastore/analytics' target='_blank'>Log Analytics Link with Hive Metastore </a>\n<br><br>\n<a href='https://docs.microsoft.com/en-us/azure/azure-resource-manager/management/azure-subscription-service-limits#sql-database-limits' target='_blank'>SQL Database Limits</a>\n<br>\n<a href='https://docs.microsoft.com/en-us/azure/azure-sql/database/' target='_blank'>Azure SQL Database Documentation</a>\n\n",
+                    "markdownSource": 1,
+                    "subtitle": "",
+                    "title": ""
+                  }
+                }
+              }
+            }
+          },
+          "1": {
+            "position": {
+              "x": 2,
+              "y": 0,
+              "colSpan": 5,
+              "rowSpan": 4
+            },
+            "metadata": {
+              "inputs": [
+                {
+                  "name": "ComponentId",
+                  "value": {
+                    "Name": "${dmp_log_analytics_workspace_name}",
+                    "ResourceGroup": "${ingest_resource_group_name}",
+                    "ResourceId": "/subscriptions/${subscription_id}/resourcegroups/${ingest_resource_group_name}/providers/microsoft.operationalinsights/workspaces/${dmp_log_analytics_workspace_name}",
+                    "SubscriptionId": "${subscription_id}"
+                  },
+                  "isOptional": true
+                },
+                {
+                  "name": "Dimensions",
+                  "isOptional": true
+                },
+                {
+                  "name": "Query",
+                  "value": "AzureDiagnostics\r\n| where  ResourceProvider ==\"MICROSOFT.SQL\"\r\n| where  Category == \"QueryStoreRuntimeStatistics\"\r\n| project TimeGenerated,DatabaseName_s,query_hash_s,interval_start_time_d,interval_end_time_d,cpu_time_d\r\n| summarize TotalCPUTime=sum(cpu_time_d) by DatabaseName_s,query_hash_s\r\n| sort by TotalCPUTime desc\n",
+                  "isOptional": true
+                },
+                {
+                  "name": "PartTitle",
+                  "value": "Analytics",
+                  "isOptional": true
+                },
+                {
+                  "name": "PartSubTitle",
+                  "value": "${dmp_log_analytics_workspace_name}",
+                  "isOptional": true
+                },
+                {
+                  "name": "PartId",
+                  "value": "41d5c4ab-a1f2-4f36-9110-6615cd9a7c73",
+                  "isOptional": true
+                },
+                {
+                  "name": "Version",
+                  "value": "1.0",
+                  "isOptional": true
+                },
+                {
+                  "name": "resourceTypeMode",
+                  "value": "workspace",
+                  "isOptional": true
+                },
+                {
+                  "name": "TimeRange",
+                  "value": "P1D",
+                  "isOptional": true
+                },
+                {
+                  "name": "DashboardId",
+                  "isOptional": true
+                },
+                {
+                  "name": "ControlType",
+                  "value": "AnalyticsGrid",
+                  "isOptional": true
+                },
+                {
+                  "name": "SpecificChart",
+                  "isOptional": true
+                }
+              ],
+              "type": "Extension/Microsoft_OperationsManagementSuite_Workspace/PartType/LogsDashboardPart",
+              "settings": {
+                "content": {
+                  "PartSubTitle": "${dmp_log_analytics_workspace_name}",
+                  "PartTitle": "Long Running Queries"
+                }
+              }
+            }
+          },
+          "2": {
+            "position": {
+              "x": 7,
+              "y": 0,
+              "colSpan": 5,
+              "rowSpan": 4
+            },
+            "metadata": {
+              "inputs": [
+                {
+                  "name": "ComponentId",
+                  "value": {
+                    "Name": "${dmp_log_analytics_workspace_name}",
+                    "ResourceGroup": "${ingest_resource_group_name}",
+                    "ResourceId": "/subscriptions/${subscription_id}/resourcegroups/${ingest_resource_group_name}/providers/microsoft.operationalinsights/workspaces/${dmp_log_analytics_workspace_name}",
+                    "SubscriptionId": "${subscription_id}"
+                  },
+                  "isOptional": true
+                },
+                {
+                  "name": "Dimensions",
+                  "isOptional": true
+                },
+                {
+                  "name": "Query",
+                  "value": "AzureDiagnostics\r\n| where ResourceProvider ==\"MICROSOFT.SQL\"\r\n| where Category == \"QueryStoreWaitStatistics\"\r\n| summarize Query_Wait_Time=sum(total_query_wait_time_ms_d)  by wait_category_s ,Resource\n",
+                  "isOptional": true
+                },
+                {
+                  "name": "PartTitle",
+                  "value": "Analytics",
+                  "isOptional": true
+                },
+                {
+                  "name": "PartSubTitle",
+                  "value": "${dmp_log_analytics_workspace_name}",
+                  "isOptional": true
+                },
+                {
+                  "name": "PartId",
+                  "value": "7689cda7-a1ad-4279-a7ef-243e147b4223",
+                  "isOptional": true
+                },
+                {
+                  "name": "Version",
+                  "value": "1.0",
+                  "isOptional": true
+                },
+                {
+                  "name": "resourceTypeMode",
+                  "value": "workspace",
+                  "isOptional": true
+                },
+                {
+                  "name": "TimeRange",
+                  "value": "P1D",
+                  "isOptional": true
+                },
+                {
+                  "name": "DashboardId",
+                  "isOptional": true
+                },
+                {
+                  "name": "ControlType",
+                  "value": "AnalyticsGrid",
+                  "isOptional": true
+                },
+                {
+                  "name": "SpecificChart",
+                  "isOptional": true
+                }
+              ],
+              "type": "Extension/Microsoft_OperationsManagementSuite_Workspace/PartType/LogsDashboardPart",
+              "settings": {
+                "content": {
+                  "PartSubTitle": "${dmp_log_analytics_workspace_name}",
+                  "PartTitle": "Query wait Time"
+                }
+              }
+            }
+          },
+          "3": {
+            "position": {
+              "x": 12,
+              "y": 0,
+              "colSpan": 5,
+              "rowSpan": 4
+            },
+            "metadata": {
+              "inputs": [
+                {
+                  "name": "ComponentId",
+                  "value": {
+                    "Name": "${dmp_log_analytics_workspace_name}",
+                    "ResourceGroup": "${ingest_resource_group_name}",
+                    "ResourceId": "/subscriptions/${subscription_id}/resourcegroups/${ingest_resource_group_name}/providers/microsoft.operationalinsights/workspaces/${dmp_log_analytics_workspace_name}",
+                    "SubscriptionId": "${subscription_id}"
+                  },
+                  "isOptional": true
+                },
+                {
+                  "name": "Dimensions",
+                  "value": {
+                    "aggregation": "Sum",
+                    "splitBy": [],
+                    "xAxis": {
+                      "name": "DatabaseWaitType",
+                      "type": "string"
+                    },
+                    "yAxis": [
+                      {
+                        "name": "WaitingTime",
+                        "type": "real"
+                      }
+                    ]
+                  },
+                  "isOptional": true
+                },
+                {
+                  "name": "Query",
+                  "value": "AzureDiagnostics\r\n| where  ResourceProvider ==\"MICROSOFT.SQL\"\r\n| where   Category ==\"DatabaseWaitStatistics\"\r\n| project TimeGenerated,DatabaseName_s,LogicalServerName_s,wait_type_s,delta_wait_time_ms_d,delta_waiting_tasks_count_d\r\n| summarize WaitingTime=sum(delta_wait_time_ms_d) by DatabaseWaitType=wait_type_s\n",
+                  "isOptional": true
+                },
+                {
+                  "name": "PartTitle",
+                  "value": "Analytics",
+                  "isOptional": true
+                },
+                {
+                  "name": "PartSubTitle",
+                  "value": "${dmp_log_analytics_workspace_name}",
+                  "isOptional": true
+                },
+                {
+                  "name": "PartId",
+                  "value": "108ede3c-1034-4c90-a787-e794a853e106",
+                  "isOptional": true
+                },
+                {
+                  "name": "Version",
+                  "value": "1.0",
+                  "isOptional": true
+                },
+                {
+                  "name": "resourceTypeMode",
+                  "value": "workspace",
+                  "isOptional": true
+                },
+                {
+                  "name": "TimeRange",
+                  "value": "P1D",
+                  "isOptional": true
+                },
+                {
+                  "name": "DashboardId",
+                  "isOptional": true
+                },
+                {
+                  "name": "ControlType",
+                  "value": "FrameControlChart",
+                  "isOptional": true
+                },
+                {
+                  "name": "SpecificChart",
+                  "value": "Pie",
+                  "isOptional": true
+                }
+              ],
+              "type": "Extension/Microsoft_OperationsManagementSuite_Workspace/PartType/LogsDashboardPart",
+              "settings": {
+                "content": {
+                  "PartSubTitle": "${dmp_log_analytics_workspace_name}",
+                  "PartTitle": "Database Wait Types"
+                }
+              }
+            }
+          },
+          "4": {
+            "position": {
+              "x": 17,
+              "y": 0,
+              "colSpan": 6,
+              "rowSpan": 4
+            },
+            "metadata": {
+              "inputs": [
+                {
+                  "name": "ComponentId",
+                  "value": {
+                    "Name": "${dmp_log_analytics_workspace_name}",
+                    "ResourceGroup": "${ingest_resource_group_name}",
+                    "ResourceId": "/subscriptions/${subscription_id}/resourcegroups/${ingest_resource_group_name}/providers/microsoft.operationalinsights/workspaces/${dmp_log_analytics_workspace_name}",
+                    "SubscriptionId": "${subscription_id}"
+                  },
+                  "isOptional": true
+                },
+                {
+                  "name": "Dimensions",
+                  "value": {
+                    "aggregation": "Sum",
+                    "splitBy": [
+                      {
+                        "name": "Database",
+                        "type": "string"
+                      }
+                    ],
+                    "xAxis": {
+                      "name": "Error_Code",
+                      "type": "real"
+                    },
+                    "yAxis": [
+                      {
+                        "name": "TotalNoOfErrors",
+                        "type": "long"
+                      }
+                    ]
+                  },
+                  "isOptional": true
+                },
+                {
+                  "name": "Query",
+                  "value": "AzureDiagnostics\r\n| where  ResourceProvider ==\"MICROSOFT.SQL\"\r\n| where Category ==\"Errors\"\r\n| where TimeGenerated >= ago(7days)\r\n| summarize TotalNoOfErrors=count() by  Error_Code=error_number_d, Database=DatabaseName_s\r\n| sort by Error_Code\n",
+                  "isOptional": true
+                },
+                {
+                  "name": "PartTitle",
+                  "value": "Analytics",
+                  "isOptional": true
+                },
+                {
+                  "name": "PartSubTitle",
+                  "value": "${dmp_log_analytics_workspace_name}",
+                  "isOptional": true
+                },
+                {
+                  "name": "PartId",
+                  "value": "14b39f4c-30d1-424b-bb16-19ea7a10a0bd",
+                  "isOptional": true
+                },
+                {
+                  "name": "Version",
+                  "value": "1.0",
+                  "isOptional": true
+                },
+                {
+                  "name": "resourceTypeMode",
+                  "value": "workspace",
+                  "isOptional": true
+                },
+                {
+                  "name": "TimeRange",
+                  "isOptional": true
+                },
+                {
+                  "name": "DashboardId",
+                  "isOptional": true
+                },
+                {
+                  "name": "ControlType",
+                  "value": "FrameControlChart",
+                  "isOptional": true
+                },
+                {
+                  "name": "SpecificChart",
+                  "value": "UnstackedColumn",
+                  "isOptional": true
+                }
+              ],
+              "type": "Extension/Microsoft_OperationsManagementSuite_Workspace/PartType/LogsDashboardPart",
+              "settings": {
+                "content": {
+                  "PartSubTitle": "${dmp_log_analytics_workspace_name}",
+                  "PartTitle": "Error_Count"
+                }
+              }
+            }
+          },
+          "5": {
+            "position": {
+              "x": 23,
+              "y": 0,
+              "colSpan": 6,
+              "rowSpan": 4
+            },
+            "metadata": {
+              "inputs": [
+                {
+                  "name": "ComponentId",
+                  "value": {
+                    "Name": "${dmp_log_analytics_workspace_name}",
+                    "ResourceGroup": "${ingest_resource_group_name}",
+                    "ResourceId": "/subscriptions/${subscription_id}/resourcegroups/${ingest_resource_group_name}/providers/microsoft.operationalinsights/workspaces/${dmp_log_analytics_workspace_name}",
+                    "SubscriptionId": "${subscription_id}"
+                  },
+                  "isOptional": true
+                },
+                {
+                  "name": "Dimensions",
+                  "isOptional": true
+                },
+                {
+                  "name": "Query",
+                  "value": "AzureDiagnostics\r\n| where  ResourceProvider ==\"MICROSOFT.SQL\"\r\n| where Category ==\"Errors\"\r\n| project TimeGenerated, LogicalServerName_s,DatabaseName_s, error_number_d,Message ,Severity\r\n| sort by TimeGenerated\n",
+                  "isOptional": true
+                },
+                {
+                  "name": "PartTitle",
+                  "value": "Analytics",
+                  "isOptional": true
+                },
+                {
+                  "name": "PartSubTitle",
+                  "value": "${dmp_log_analytics_workspace_name}",
+                  "isOptional": true
+                },
+                {
+                  "name": "PartId",
+                  "value": "48093654-959a-4f14-b13a-8d01251387f9",
+                  "isOptional": true
+                },
+                {
+                  "name": "Version",
+                  "value": "1.0",
+                  "isOptional": true
+                },
+                {
+                  "name": "resourceTypeMode",
+                  "value": "workspace",
+                  "isOptional": true
+                },
+                {
+                  "name": "TimeRange",
+                  "value": "P1D",
+                  "isOptional": true
+                },
+                {
+                  "name": "DashboardId",
+                  "isOptional": true
+                },
+                {
+                  "name": "ControlType",
+                  "value": "AnalyticsGrid",
+                  "isOptional": true
+                },
+                {
+                  "name": "SpecificChart",
+                  "isOptional": true
+                }
+              ],
+              "type": "Extension/Microsoft_OperationsManagementSuite_Workspace/PartType/LogsDashboardPart",
+              "settings": {
+                "content": {
+                  "PartSubTitle": "${dmp_log_analytics_workspace_name}",
+                  "PartTitle": "Error_Log"
+                }
+              }
+            }
+          },
+          "6": {
+            "position": {
+              "x": 29,
+              "y": 0,
+              "colSpan": 6,
+              "rowSpan": 4
+            },
+            "metadata": {
+              "inputs": [
+                {
+                  "name": "ComponentId",
+                  "value": {
+                    "Name": "${dmp_log_analytics_workspace_name}",
+                    "ResourceGroup": "${ingest_resource_group_name}",
+                    "ResourceId": "/subscriptions/${subscription_id}/resourcegroups/${ingest_resource_group_name}/providers/microsoft.operationalinsights/workspaces/${dmp_log_analytics_workspace_name}",
+                    "SubscriptionId": "${subscription_id}"
+                  },
+                  "isOptional": true
+                },
+                {
+                  "name": "Dimensions",
+                  "value": {
+                    "aggregation": "Average",
+                    "splitBy": [
+                      {
+                        "name": "ResourceId",
+                        "type": "string"
+                      }
+                    ],
+                    "xAxis": {
+                      "name": "TimeGenerated",
+                      "type": "datetime"
+                    },
+                    "yAxis": [
+                      {
+                        "name": "max_query_max_used_memory_d",
+                        "type": "real"
+                      }
+                    ]
+                  },
+                  "isOptional": true
+                },
+                {
+                  "name": "Query",
+                  "value": "AzureDiagnostics\r\n| where ResourceProvider==\"MICROSOFT.SQL\"\r\n| where ResourceId contains \"/DATABASES/\"\r\n| where query_max_used_memory_d >0\r\n| render timechart\n",
+                  "isOptional": true
+                },
+                {
+                  "name": "PartTitle",
+                  "value": "Analytics",
+                  "isOptional": true
+                },
+                {
+                  "name": "PartSubTitle",
+                  "value": "${dmp_log_analytics_workspace_name}",
+                  "isOptional": true
+                },
+                {
+                  "name": "PartId",
+                  "value": "3cede071-4f16-4eb8-a43c-5753eb4f950a",
+                  "isOptional": true
+                },
+                {
+                  "name": "Version",
+                  "value": "1.0",
+                  "isOptional": true
+                },
+                {
+                  "name": "resourceTypeMode",
+                  "value": "workspace",
+                  "isOptional": true
+                },
+                {
+                  "name": "TimeRange",
+                  "value": "P7D",
+                  "isOptional": true
+                },
+                {
+                  "name": "DashboardId",
+                  "isOptional": true
+                },
+                {
+                  "name": "ControlType",
+                  "value": "FrameControlChart",
+                  "isOptional": true
+                },
+                {
+                  "name": "SpecificChart",
+                  "value": "Line",
+                  "isOptional": true
+                }
+              ],
+              "type": "Extension/Microsoft_OperationsManagementSuite_Workspace/PartType/LogsDashboardPart",
+              "settings": {
+                "content": {
+                  "PartSubTitle": "${dmp_log_analytics_workspace_name}",
+                  "PartTitle": "Queries max used memory"
+                }
+              }
+            }
+          },
+          "7": {
+            "position": {
+              "x": 0,
+              "y": 4,
+              "colSpan": 2,
+              "rowSpan": 4
+            },
+            "metadata": {
+              "inputs": [],
+              "type": "Extension/HubsExtension/PartType/MarkdownPart",
+              "settings": {
+                "content": {
+                  "settings": {
+                    "content": "<br><br>\n<strong><em>Azure\nFunction\nApp</em></storng>\n<br>\n<a href='https://portal.azure.com/#@${tenant_id}/resource/subscriptions/${subscription_id}/resourceGroups/${ingest_resource_group_name}/providers/Microsoft.Web/sites/${dmp_runway_functionapp_name}/appServices' target='_blank'>${dmp_runway_functionapp_name}\n</a>\n<br><Br>\n<a href='https://portal.azure.com/#@${tenant_id}/resource/subscriptions/${subscription_id}/resourceGroups/${ingest_resource_group_name}/providers/Microsoft.Insights/components/${dmp_runway_application_insights_name}/performance' target='_blank'>Performance</a>\n<br><a href='https://portal.azure.com/#@${tenant_id}/resource/subscriptions/${subscription_id}/resourceGroups/${ingest_resource_group_name}/providers/Microsoft.Insights/components/${dmp_runway_application_insights_name}/failures' target='_blank'>Failures</a>\n<br><a href='https://portal.azure.com/#@${tenant_id}/resource/subscriptions/${subscription_id}/resourceGroups/${ingest_resource_group_name}/providers/Microsoft.Insights/components/${dmp_runway_application_insights_name}/logs' target='_blank'>Log Analytics Link with Function App scope</a>\n<br><br>\n<a href='https://docs.microsoft.com/en-us/azure/azure-resource-manager/management/azure-subscription-service-limits#azure-functions-limits' target='_blank'>Azure Function Limits</a>\n<br>\n<a href='https://docs.microsoft.com/en-us/azure/azure-functions/' target='_blank'>Azure Function Documentation</a>\n\n",
+                    "markdownSource": 1,
+                    "subtitle": "",
+                    "title": ""
+                  }
+                }
+              }
+            }
+          },
+          "8": {
+            "position": {
+              "x": 2,
+              "y": 4,
+              "colSpan": 5,
+              "rowSpan": 4
+            },
+            "metadata": {
+              "inputs": [
+                {
+                  "name": "ComponentId",
+                  "value": {
+                    "Name": "${dmp_runway_application_insights_name}",
+                    "ResourceGroup": "${ingest_resource_group_name}",
+                    "ResourceId": "/subscriptions/${subscription_id}/resourceGroups/${ingest_resource_group_name}/providers/microsoft.insights/components/${dmp_runway_application_insights_name}",
+                    "SubscriptionId": "${subscription_id}"
+                  },
+                  "isOptional": true
+                },
+                {
+                  "name": "Dimensions",
+                  "value": {
+                    "aggregation": "Sum",
+                    "splitBy": [],
+                    "xAxis": {
+                      "name": "operation_Name",
+                      "type": "string"
+                    },
+                    "yAxis": [
+                      {
+                        "name": "RequestsCount",
+                        "type": "long"
+                      }
+                    ]
+                  },
+                  "isOptional": true
+                },
+                {
+                  "name": "Query",
+                  "value": "requests\r\n| summarize RequestsCount=sum(itemCount), AverageDuration=avg(duration)by operation_Name\r\n// you can replace 'operation_Name' with another value to segment by a different property\r\n| order by RequestsCount desc\r\n// order from highest to lower (descending)\n",
+                  "isOptional": true
+                },
+                {
+                  "name": "PartTitle",
+                  "value": "Analytics",
+                  "isOptional": true
+                },
+                {
+                  "name": "PartSubTitle",
+                  "value": "${dmp_runway_application_insights_name}",
+                  "isOptional": true
+                },
+                {
+                  "name": "PartId",
+                  "value": "0ef08a19-012e-4d9c-92f9-c471a2a0d6e9",
+                  "isOptional": true
+                },
+                {
+                  "name": "Version",
+                  "value": "1.0",
+                  "isOptional": true
+                },
+                {
+                  "name": "resourceTypeMode",
+                  "value": "components",
+                  "isOptional": true
+                },
+                {
+                  "name": "TimeRange",
+                  "value": "P1D",
+                  "isOptional": true
+                },
+                {
+                  "name": "DashboardId",
+                  "isOptional": true
+                },
+                {
+                  "name": "ControlType",
+                  "value": "FrameControlChart",
+                  "isOptional": true
+                },
+                {
+                  "name": "SpecificChart",
+                  "value": "Pie",
+                  "isOptional": true
+                }
+              ],
+              "type": "Extension/Microsoft_OperationsManagementSuite_Workspace/PartType/LogsDashboardPart",
+              "settings": {
+                "content": {
+                  "PartSubTitle": "${dmp_runway_application_insights_name}",
+                  "PartTitle": "Analysis of Function Execution"
+                }
+              }
+            }
+          },
+          "9": {
+            "position": {
+              "x": 7,
+              "y": 4,
+              "colSpan": 5,
+              "rowSpan": 4
+            },
+            "metadata": {
+              "inputs": [
+                {
+                  "name": "ComponentId",
+                  "value": {
+                    "Name": "${dmp_runway_application_insights_name}",
+                    "ResourceGroup": "${ingest_resource_group_name}",
+                    "ResourceId": "/subscriptions/${subscription_id}/resourceGroups/${ingest_resource_group_name}/providers/microsoft.insights/components/${dmp_runway_application_insights_name}",
+                    "SubscriptionId": "${subscription_id}"
+                  },
+                  "isOptional": true
+                },
+                {
+                  "name": "Dimensions",
+                  "isOptional": true
+                },
+                {
+                  "name": "Query",
+                  "value": "// Last 100 execution of Function  App with  Function  name   and Execution   Duration\r\nrequests\r\n| limit 100\r\n| project timestamp,operation_Name,success ,cloud_RoleName,duration  ,source\r\n| order by timestamp desc\n",
+                  "isOptional": true
+                },
+                {
+                  "name": "PartTitle",
+                  "value": "Analytics",
+                  "isOptional": true
+                },
+                {
+                  "name": "PartSubTitle",
+                  "value": "${dmp_runway_application_insights_name}",
+                  "isOptional": true
+                },
+                {
+                  "name": "PartId",
+                  "value": "00214c47-0f69-4602-910f-cf3a9211c4b6",
+                  "isOptional": true
+                },
+                {
+                  "name": "Version",
+                  "value": "1.0",
+                  "isOptional": true
+                },
+                {
+                  "name": "resourceTypeMode",
+                  "value": "components",
+                  "isOptional": true
+                },
+                {
+                  "name": "TimeRange",
+                  "value": "P1D",
+                  "isOptional": true
+                },
+                {
+                  "name": "DashboardId",
+                  "isOptional": true
+                },
+                {
+                  "name": "ControlType",
+                  "value": "AnalyticsGrid",
+                  "isOptional": true
+                },
+                {
+                  "name": "SpecificChart",
+                  "isOptional": true
+                }
+              ],
+              "type": "Extension/Microsoft_OperationsManagementSuite_Workspace/PartType/LogsDashboardPart",
+              "settings": {
+                "content": {
+                  "GridColumnsWidth": {
+                    "operation_Name": "870px"
+                  },
+                  "PartSubTitle": "${dmp_runway_application_insights_name}",
+                  "PartTitle": "Top 100 executions"
+                }
+              }
+            }
+          },
+          "10": {
+            "position": {
+              "x": 12,
+              "y": 4,
+              "colSpan": 5,
+              "rowSpan": 4
+            },
+            "metadata": {
+              "inputs": [
+                {
+                  "name": "ComponentId",
+                  "value": {
+                    "SubscriptionId": "${subscription_id}",
+                    "ResourceGroup": "${ingest_resource_group_name}",
+                    "Name": "${dmp_runway_application_insights_name}",
+                    "ResourceId": "/subscriptions/${subscription_id}/resourceGroups/${ingest_resource_group_name}/providers/Microsoft.Insights/components/${dmp_runway_application_insights_name}"
+                  },
+                  "isOptional": true
+                },
+                {
+                  "name": "Dimensions",
+                  "value": {
+                    "xAxis": {
+                      "name": "timestamp",
+                      "type": "datetime"
+                    },
+                    "yAxis": [
+                      {
+                        "name": "avgRequestDuration",
+                        "type": "real"
+                      }
+                    ],
+                    "splitBy": [],
+                    "aggregation": "Sum"
+                  },
+                  "isOptional": true
+                },
+                {
+                  "name": "Query",
+                  "value": "// Response time trend \n// Chart request duration over the last 12 hours. \n// To create an alert for this query, click '+ New alert rule'\nrequests\n| where timestamp > ago(12h) \n| summarize avgRequestDuration=avg(duration) by bin(timestamp, 10m) // use a time grain of 10 minutes\n| render timechart\n",
+                  "isOptional": true
+                },
+                {
+                  "name": "PartTitle",
+                  "value": "Analytics",
+                  "isOptional": true
+                },
+                {
+                  "name": "PartSubTitle",
+                  "value": "${dmp_runway_application_insights_name}",
+                  "isOptional": true
+                },
+                {
+                  "name": "PartId",
+                  "value": "393a895b-5661-4b69-9474-432913bb9e16",
+                  "isOptional": true
+                },
+                {
+                  "name": "Version",
+                  "value": "1.0",
+                  "isOptional": true
+                },
+                {
+                  "name": "resourceTypeMode",
+                  "value": "components",
+                  "isOptional": true
+                },
+                {
+                  "name": "TimeRange",
+                  "isOptional": true
+                },
+                {
+                  "name": "DashboardId",
+                  "isOptional": true
+                },
+                {
+                  "name": "ControlType",
+                  "value": "FrameControlChart",
+                  "isOptional": true
+                },
+                {
+                  "name": "SpecificChart",
+                  "value": "Line",
+                  "isOptional": true
+                }
+              ],
+              "type": "Extension/Microsoft_OperationsManagementSuite_Workspace/PartType/LogsDashboardPart",
+              "settings": {
+                "content": {
+                  "PartTitle": "Response time trend",
+                  "PartSubTitle": "${dmp_runway_application_insights_name}"
+                }
+              }
+            }
+          },
+          "11": {
+            "position": {
+              "x": 17,
+              "y": 4,
+              "colSpan": 6,
+              "rowSpan": 4
+            },
+            "metadata": {
+              "inputs": [
+                {
+                  "name": "ComponentId",
+                  "value": {
+                    "SubscriptionId": "${subscription_id}",
+                    "ResourceGroup": "${ingest_resource_group_name}",
+                    "Name": "${dmp_runway_application_insights_name}",
+                    "ResourceId": "/subscriptions/${subscription_id}/resourceGroups/${ingest_resource_group_name}/providers/Microsoft.Insights/components/${dmp_runway_application_insights_name}"
+                  },
+                  "isOptional": true
+                },
+                {
+                  "name": "Dimensions",
+                  "value": {
+                    "xAxis": {
+                      "name": "operation_Name",
+                      "type": "string"
+                    },
+                    "yAxis": [
+                      {
+                        "name": "failedCount",
+                        "type": "long"
+                      }
+                    ],
+                    "splitBy": [],
+                    "aggregation": "Sum"
+                  },
+                  "isOptional": true
+                },
+                {
+                  "name": "Query",
+                  "value": "// Failed operations \n// Calculate how many times operations failed, and how many users were impacted. \n// To create an alert for this query, click '+ New alert rule'\nrequests\n| where success == false\n| summarize failedCount=sum(itemCount), impactedUsers=dcount(user_Id) by operation_Name\n| order by failedCount desc\n",
+                  "isOptional": true
+                },
+                {
+                  "name": "PartTitle",
+                  "value": "Analytics",
+                  "isOptional": true
+                },
+                {
+                  "name": "PartSubTitle",
+                  "value": "${dmp_runway_application_insights_name}",
+                  "isOptional": true
+                },
+                {
+                  "name": "PartId",
+                  "value": "73413314-2796-41b9-ad14-7a0ef7a0f97f",
+                  "isOptional": true
+                },
+                {
+                  "name": "Version",
+                  "value": "1.0",
+                  "isOptional": true
+                },
+                {
+                  "name": "resourceTypeMode",
+                  "value": "components",
+                  "isOptional": true
+                },
+                {
+                  "name": "TimeRange",
+                  "value": "P1D",
+                  "isOptional": true
+                },
+                {
+                  "name": "DashboardId",
+                  "isOptional": true
+                },
+                {
+                  "name": "ControlType",
+                  "value": "FrameControlChart",
+                  "isOptional": true
+                },
+                {
+                  "name": "SpecificChart",
+                  "value": "Pie",
+                  "isOptional": true
+                }
+              ],
+              "type": "Extension/Microsoft_OperationsManagementSuite_Workspace/PartType/LogsDashboardPart",
+              "settings": {
+                "content": {
+                  "PartTitle": "Failed operations",
+                  "PartSubTitle": "${dmp_runway_application_insights_name}"
+                }
+              }
+            }
+          },
+          "12": {
+            "position": {
+              "x": 23,
+              "y": 4,
+              "colSpan": 6,
+              "rowSpan": 4
+            },
+            "metadata": {
+              "inputs": [
+                {
+                  "name": "ComponentId",
+                  "value": {
+                    "SubscriptionId": "${subscription_id}",
+                    "ResourceGroup": "${ingest_resource_group_name}",
+                    "Name": "${dmp_runway_application_insights_name}",
+                    "ResourceId": "/subscriptions/${subscription_id}/resourceGroups/${ingest_resource_group_name}/providers/Microsoft.Insights/components/${dmp_runway_application_insights_name}"
+                  },
+                  "isOptional": true
+                },
+                {
+                  "name": "Dimensions",
+                  "value": {
+                    "xAxis": {
+                      "name": "requestName",
+                      "type": "string"
+                    },
+                    "yAxis": [
+                      {
+                        "name": "requestDuration",
+                        "type": "real"
+                      }
+                    ],
+                    "splitBy": [],
+                    "aggregation": "Sum"
+                  },
+                  "isOptional": true
+                },
+                {
+                  "name": "Query",
+                  "value": "// Exceptions causing request failures \n// Find which exceptions led to failed requests in the past hour. \nrequests\n| where timestamp > ago(1h) and success == false\n| join kind= inner (\nexceptions\n| where timestamp > ago(1h)\n) on operation_Id\n| project exceptionType = type, failedMethod = method, requestName = name, requestDuration = duration\n",
+                  "isOptional": true
+                },
+                {
+                  "name": "PartTitle",
+                  "value": "Analytics",
+                  "isOptional": true
+                },
+                {
+                  "name": "PartSubTitle",
+                  "value": "${dmp_runway_application_insights_name}",
+                  "isOptional": true
+                },
+                {
+                  "name": "PartId",
+                  "value": "1408d3bc-7cf7-4f19-bf37-17c6c1114f41",
+                  "isOptional": true
+                },
+                {
+                  "name": "Version",
+                  "value": "1.0",
+                  "isOptional": true
+                },
+                {
+                  "name": "resourceTypeMode",
+                  "value": "components",
+                  "isOptional": true
+                },
+                {
+                  "name": "TimeRange",
+                  "isOptional": true
+                },
+                {
+                  "name": "DashboardId",
+                  "isOptional": true
+                },
+                {
+                  "name": "ControlType",
+                  "value": "FrameControlChart",
+                  "isOptional": true
+                },
+                {
+                  "name": "SpecificChart",
+                  "value": "Pie",
+                  "isOptional": true
+                }
+              ],
+              "type": "Extension/Microsoft_OperationsManagementSuite_Workspace/PartType/LogsDashboardPart",
+              "settings": {
+                "content": {
+                  "PartTitle": "Exceptions causing request failures",
+                  "PartSubTitle": "${dmp_runway_application_insights_name}"
+                }
+              }
+            }
+          },
+          "13": {
+            "position": {
+              "x": 29,
+              "y": 4,
+              "colSpan": 6,
+              "rowSpan": 4
+            },
+            "metadata": {
+              "inputs": [
+                {
+                  "name": "ComponentId",
+                  "value": {
+                    "SubscriptionId": "${subscription_id}",
+                    "ResourceGroup": "${ingest_resource_group_name}",
+                    "Name": "${dmp_runway_application_insights_name}",
+                    "ResourceId": "/subscriptions/${subscription_id}/resourceGroups/${ingest_resource_group_name}/providers/Microsoft.Insights/components/${dmp_runway_application_insights_name}"
+                  },
+                  "isOptional": true
+                },
+                {
+                  "name": "Dimensions",
+                  "value": {
+                    "xAxis": {
+                      "name": "performanceBucket",
+                      "type": "string"
+                    },
+                    "yAxis": [
+                      {
+                        "name": "requestCount",
+                        "type": "long"
+                      }
+                    ],
+                    "splitBy": [],
+                    "aggregation": "Sum"
+                  },
+                  "isOptional": true
+                },
+                {
+                  "name": "Query",
+                  "value": "// Response time buckets \n// Show how many requests are in each performance-bucket. \nrequests\n| summarize requestCount=sum(itemCount), avgDuration=avg(duration) by performanceBucket\n| order by avgDuration asc // sort by average request duration\n| project-away avgDuration // no need to display avgDuration, we used it only for sorting results\n| render barchart\n",
+                  "isOptional": true
+                },
+                {
+                  "name": "PartTitle",
+                  "value": "Analytics",
+                  "isOptional": true
+                },
+                {
+                  "name": "PartSubTitle",
+                  "value": "${dmp_runway_application_insights_name}",
+                  "isOptional": true
+                },
+                {
+                  "name": "PartId",
+                  "value": "123c164d-1e42-4c0a-882e-2b326b0aad31",
+                  "isOptional": true
+                },
+                {
+                  "name": "Version",
+                  "value": "1.0",
+                  "isOptional": true
+                },
+                {
+                  "name": "resourceTypeMode",
+                  "value": "components",
+                  "isOptional": true
+                },
+                {
+                  "name": "TimeRange",
+                  "value": "P1D",
+                  "isOptional": true
+                },
+                {
+                  "name": "DashboardId",
+                  "isOptional": true
+                },
+                {
+                  "name": "ControlType",
+                  "value": "FrameControlChart",
+                  "isOptional": true
+                },
+                {
+                  "name": "SpecificChart",
+                  "value": "StackedColumn",
+                  "isOptional": true
+                }
+              ],
+              "type": "Extension/Microsoft_OperationsManagementSuite_Workspace/PartType/LogsDashboardPart",
+              "settings": {
+                "content": {
+                  "PartTitle": "Response time buckets",
+                  "PartSubTitle": "${dmp_runway_application_insights_name}"
+                }
+              }
+            }
+          },
+               "14": {
+    "position": {
+      "x": 35,
+      "y": 4,
+      "colSpan": 6,
+      "rowSpan": 4
+    },
+    "metadata": {
+      "inputs": [
+        {
+          "name": "resourceTypeMode",
+          "isOptional": true
+        },
+        {
+          "name": "ComponentId",
+          "isOptional": true
+        },
+        {
+          "name": "Scope",
+          "value": {
+            "resourceIds": [
+              "/subscriptions/${subscription_id}/resourceGroups/${ingest_resource_group_name}/providers/microsoft.insights/components/${dmp_runway_application_insights_name}"
+            ]
+          },
+          "isOptional": true
+        },
+        {
+          "name": "Dimensions",
+          "value": {
+            "xAxis": {
+              "name": "operation_Name",
+              "type": "string"
+            },
+            "yAxis": [
+              {
+                "name": "RequestsCount",
+                "type": "long"
+              },
+              {
+                "name": "AverageDuration",
+                "type": "real"
+              }
+            ],
+            "splitBy": [],
+            "aggregation": "Sum"
+          },
+          "isOptional": true
+        },
+        {
+          "name": "PartId",
+          "value": "79884e69-40d6-4fbc-811f-3e9d0a45d0a0",
+          "isOptional": true
+        },
+        {
+          "name": "Version",
+          "value": "2.0",
+          "isOptional": true
+        },
+        {
+          "name": "TimeRange",
+          "value": "P1D",
+          "isOptional": true
+        },
+        {
+          "name": "DashboardId",
+          "isOptional": true
+        },
+        {
+          "name": "DraftRequestParameters",
+          "isOptional": true
+        },
+        {
+          "name": "Query",
+          "value": "requests \r\n| where timestamp > ago(1h) \r\n| summarize RequestsCount=sum(itemCount), AverageDuration=avg(duration)by operation_Name\r\n\r\n",
+          "isOptional": true
+        },
+        {
+          "name": "ControlType",
+          "value": "FrameControlChart",
+          "isOptional": true
+        },
+        {
+          "name": "SpecificChart",
+          "value": "StackedColumn",
+          "isOptional": true
+        },
+        {
+          "name": "PartTitle",
+          "value": "Analytics",
+          "isOptional": true
+        },
+        {
+          "name": "PartSubTitle",
+          "value": "${dmp_runway_application_insights_name}",
+          "isOptional": true
+        }
+      ],
+      "type": "Extension/Microsoft_OperationsManagementSuite_Workspace/PartType/LogsDashboardPart",
+      "settings": {
+        "content": {
+          "PartTitle": "Requests by Operation Name",
+          "PartSubTitle": "${dmp_runway_application_insights_name}"
+        }
+      }
+    }
+  },
+  "15": {
+    "position": {
+      "x": 41,
+      "y": 4,
+      "colSpan": 6,
+      "rowSpan": 4
+    },
+    "metadata": {
+      "inputs": [
+        {
+          "name": "resourceTypeMode",
+          "isOptional": true
+        },
+        {
+          "name": "ComponentId",
+          "isOptional": true
+        },
+        {
+          "name": "Scope",
+          "value": {
+            "resourceIds": [
+              "/subscriptions/${subscription_id}/resourceGroups/${ingest_resource_group_name}/providers/microsoft.insights/components/${dmp_runway_application_insights_name}"
+            ]
+          },
+          "isOptional": true
+        },
+        {
+          "name": "Dimensions",
+          "isOptional": true
+        },
+        {
+          "name": "PartId",
+          "value": "8e4b538c-c0a6-46d3-814d-b9e1a1373d1f",
+          "isOptional": true
+        },
+        {
+          "name": "Version",
+          "value": "2.0",
+          "isOptional": true
+        },
+        {
+          "name": "TimeRange",
+          "value": "P1D",
+          "isOptional": true
+        },
+        {
+          "name": "DashboardId",
+          "isOptional": true
+        },
+        {
+          "name": "DraftRequestParameters",
+          "isOptional": true
+        },
+        {
+          "name": "Query",
+          "value": "let getjson = (message:string = \"\") {\r\n    parse_json(\r\n        replace(\"'\",'\"',replace(@\"None\",@\"'None'\",\r\n            replace(@\": (\\d+),\",@': \"\\1\",',\r\n                replace(@\": datetime.datetime\\(.*\\),\",@': \"Nada\",',\r\n                    substring(message,indexof(message,\"{\"),indexof(message,\"}\")+1)))\r\n        ))\r\n    )\r\n};\r\nlet getjobexecutionguid= (messageid:string,message:string) {\r\ncase (\r\n    messageid startswith \"adfpipelinedeleted->pipeline\",toupper(substring(messageid,indexof(messageid,\"_\")+1,36)),\r\n    messageid startswith \"adfpipelinecompleted->pipeline\",toupper(substring(messageid,indexof(messageid,\"_\")+1,36)),\r\n    messageid startswith \"jobexecutionstatusupdated->\",toupper(substring(messageid,indexof(messageid,\"->\")+2,36)),\r\n    messageid startswith \"adfpipelinestarted->pipeline\",toupper(substring(messageid,indexof(messageid,\"_\")+1,36)),\r\n    messageid startswith \"jobexecutionenqueued->\",toupper(substring(messageid,indexof(messageid,\"->\")+2,36)),\r\n    messageid startswith \"adfpipelinefailed->pipeline\",toupper(substring(messageid,indexof(messageid,\"_\")+1,36)),\r\n    messageid startswith \"adfpipelinecompleted->pipeline\",toupper(substring(messageid,indexof(messageid,\"_\")+1,36)),\r\n    message startswith \"enqueueing workflow id\",toupper(substring(message,indexof(message,\" job execution id \")+18,36)),\r\n    \"none\"\r\n)\r\n};\r\nlet getworkflowid = (message:string) {\r\ncase(\r\n    message startswith \"enqueueing workflow id\",tolower(substring(message,indexof(message,\"enqueueing workflow id\")+23,36)),\r\n    \"none\"\r\n)\r\n};\r\nlet getinvocationId = (message:string) {\r\ncase(\r\n    message startswith \"enqueueing workflow id\",tolower(substring(message,indexof(message,\" invocation id \")+15,36)),\r\n    \"none\"\r\n)\r\n};\r\nlet getrunid = (messageid:string) {\r\ncase (\r\n    messageid startswith \"workflowinvoked\",tolower(substring(messageid,indexof(messageid,\"+\")+1,36)),\r\n    messageid startswith \"adfpipelinestarted->pipeline\",tolower(substring(messageid,indexof(messageid,\"+\")+1,36)),\r\n    messageid startswith \"adfpipelinefailed->pipeline\",tolower(substring(messageid,indexof(messageid,\"+\")+1,36)),\r\n    messageid startswith \"adfpipelinecompleted->pipeline\",tolower(substring(messageid,indexof(messageid,\"+\")+1,36)),\r\n    messageid startswith \"jobexecutionstatusupdated->\",tolower(substring(messageid,indexof(messageid,\"+\")+1,36)),\r\n    messageid startswith \"adfpipelinedeleted->pipeline\",tolower(substring(messageid,indexof(messageid,\"+\")+1,36)),\r\n    \"none\"\r\n    )\r\n};\r\nlet getstage= (messageid:string,message:string) {\r\ncase (\r\n    messageid startswith \"adfpipelinedeleted->pipeline\",\"ADF Pipeline Delete\",\r\n    messageid startswith \"adfpipelinecompleted->pipeline\",\"ADF Pipeline Success\",\r\n    messageid startswith \"adfpipelinestarted->pipeline\",\"ADF Pipeline Started\",\r\n    messageid startswith \"adfpipelinefailed->pipeline\",\"ADF Pipeline Failed\",\r\n    messageid startswith \"jobexecutionenqueued->\",\"ADF Pipeline Queued\",\r\n    message startswith \"enqueueing workflow id\",\"Job Execution Fetched\",\r\n    \"none\"\r\n)\r\n};\r\ntraces\r\n| extend jsondata = getjson(message)\r\n| extend corrdata=tostring(jsondata['correlation_id'])\r\n| extend messageid=tostring(jsondata['message_id'])\r\n| extend workflowid = getworkflowid(message)\r\n| extend invocationid = getinvocationId(message)\r\n| extend jobexecutionguid= getjobexecutionguid(messageid,message)\r\n| extend runid= getrunid(messageid)\r\n| extend stage = getstage(messageid,message)\r\n| where (operation_Name  == \"MessageLogger\" and message startswith \"Starting\") or ( operation_Name == \"ExecutionRunner\" and message startswith \"enqueueing workflow id\")\r\n| extend runid=getrunid(messageid)\r\n| where stage != \"none\" and runid != \"n/a\"\r\n| order by jobexecutionguid,timestamp asc\r\n| project workflowid,invocationid,jobexecutionguid,stage, timestamp\r\n| where timestamp > ago(20h)\r\n\n",
+          "isOptional": true
+        },
+        {
+          "name": "ControlType",
+          "value": "AnalyticsGrid",
+          "isOptional": true
+        },
+        {
+          "name": "SpecificChart",
+          "isOptional": true
+        },
+        {
+          "name": "PartTitle",
+          "value": "Analytics",
+          "isOptional": true
+        },
+        {
+          "name": "PartSubTitle",
+          "value": "${dmp_runway_application_insights_name}",
+          "isOptional": true
+        }
+      ],
+      "type": "Extension/Microsoft_OperationsManagementSuite_Workspace/PartType/LogsDashboardPart",
+      "settings": {}
+    }
+  },
+          "16": {
+            "position": {
+              "x": 0,
+              "y": 8,
+              "colSpan": 2,
+              "rowSpan": 4
+            },
+            "metadata": {
+              "inputs": [],
+              "type": "Extension/HubsExtension/PartType/MarkdownPart",
+              "settings": {
+                "content": {
+                  "settings": {
+                    "content": "<br><br>\n<strong><em>Azure\nData \nFactory</em></storng>\n<a href='https://portal.azure.com/#@${tenant_id}/resource/subscriptions/${subscription_id}/resourceGroups/${ingest_resource_group_name}/providers/Microsoft.DataFactory/factories/${dmp_runway_data_factory_name}/overview' target='_blank'>${dmp_runway_data_factory_name}</a><br>\n<a href='https://adf.azure.com/home?factory=%2Fsubscriptions%2F${subscription_id}%2FresourceGroups%2F${ingest_resource_group_name}%2Fproviders%2FMicrosoft.DataFactory%2Ffactories%2F${dmp_runway_data_factory_name}' target='_blank'>Author and Monitor</a>\n<br><br>\n<em><a href= 'https://portal.azure.com/#@8331e14a-9134-4288-bf5a-5e2c8412f074/resource/subscriptions/60b60000-6cbd-4c1b-94b3-2440bd6bbe00/resourcegroups/rg-dmpenterprisedataingestion-build-001/providers/microsoft.operationalinsights/workspaces/dmp-la-runway-build-001/logs' target='_blank'>Log Analytics Link with ADF scope</a></em>\n<br><Br>\n<a href='https://docs.microsoft.com/en-us/azure/azure-resource-manager/management/azure-subscription-service-limits#data-factory-limits' target='_blank'>ADF Limits</a>\n<br><a href='https://docs.microsoft.com/en-us/azure/data-factory/' target='_blank'>ADF Documentation</a>\n",
+                    "markdownSource": 1,
+                    "subtitle": "",
+                    "title": ""
+                  }
+                }
+              }
+            }
+          },
+               
+          "17": {
+            "position": {
+              "x": 2,
+              "y": 8,
+              "colSpan": 5,
+              "rowSpan": 4
+            },
+            "metadata": {
+              "inputs": [
+                {
+                  "name": "ComponentId",
+                  "value": {
+                    "Name": "${dmp_log_analytics_workspace_name}",
+                    "ResourceGroup": "${ingest_resource_group_name}",
+                    "ResourceId": "/subscriptions/${subscription_id}/resourcegroups/${ingest_resource_group_name}/providers/microsoft.operationalinsights/workspaces/${dmp_log_analytics_workspace_name}",
+                    "SubscriptionId": "${subscription_id}"
+                  },
+                  "isOptional": true
+                },
+                {
+                  "name": "Dimensions",
+                  "isOptional": true
+                },
+                {
+                  "name": "Query",
+                  "value": "let data = ADFPipelineRun\r\n| where TimeGenerated > ago(2d)\r\n| where Status != \"InProgress\";\r\ndata\r\n| summarize Count = count() by ResourceId, Status, PipelineName\r\n| join kind = inner\r\n(\r\n    data\r\n    | make-series Trend = count()  default = 0 on TimeGenerated from ago(2d) to now() step 1h by ResourceId, Status, PipelineName\r\n    | project-away TimeGenerated\r\n)\r\non ResourceId, Status, PipelineName\r\n| project ResourceId,PipelineName, Count, Status\r\n| order by Count desc;\r\n",
+                  "isOptional": true
+                },
+                {
+                  "name": "PartTitle",
+                  "value": "Analytics",
+                  "isOptional": true
+                },
+                {
+                  "name": "PartSubTitle",
+                  "value": "${dmp_log_analytics_workspace_name}",
+                  "isOptional": true
+                },
+                {
+                  "name": "PartId",
+                  "value": "10fe5a60-158a-4484-90f1-098b85de37d8",
+                  "isOptional": true
+                },
+                {
+                  "name": "Version",
+                  "value": "1.0",
+                  "isOptional": true
+                },
+                {
+                  "name": "resourceTypeMode",
+                  "value": "workspace",
+                  "isOptional": true
+                },
+                {
+                  "name": "TimeRange",
+                  "isOptional": true
+                },
+                {
+                  "name": "DashboardId",
+                  "isOptional": true
+                },
+                {
+                  "name": "ControlType",
+                  "value": "AnalyticsGrid",
+                  "isOptional": true
+                },
+                {
+                  "name": "SpecificChart",
+                  "isOptional": true
+                }
+              ],
+              "type": "Extension/Microsoft_OperationsManagementSuite_Workspace/PartType/LogsDashboardPart",
+              "settings": {
+                "content": {
+                  "PartSubTitle": "${dmp_log_analytics_workspace_name}",
+                  "PartTitle": "Pipeline Runs"
+                }
+              }
+            }
+          },
+          "18": {
+            "position": {
+              "x": 7,
+              "y": 8,
+              "colSpan": 5,
+              "rowSpan": 4
+            },
+            "metadata": {
+              "inputs": [
+                {
+                  "name": "ComponentId",
+                  "value": {
+                    "Name": "${dmp_log_analytics_workspace_name}",
+                    "ResourceGroup": "${ingest_resource_group_name}",
+                    "ResourceId": "/subscriptions/${subscription_id}/resourcegroups/${ingest_resource_group_name}/providers/microsoft.operationalinsights/workspaces/${dmp_log_analytics_workspace_name}",
+                    "SubscriptionId": "${subscription_id}"
+                  },
+                  "isOptional": true
+                },
+                {
+                  "name": "Dimensions",
+                  "isOptional": true
+                },
+                {
+                  "name": "Query",
+                  "value": "let data = ADFActivityRun\r\n| where TimeGenerated > ago(2d)\r\n| where Status != \"InProgress\";\r\ndata\r\n| summarize Count = count() by ResourceId, Status, ActivityName\r\n| join kind = inner\r\n(\r\n    data\r\n    | make-series Trend = count()  default = 0 on TimeGenerated from ago(2d) to now() step 1h by ResourceId, Status, ActivityName\r\n    | project-away TimeGenerated\r\n)\r\non ResourceId, Status, ActivityName\r\n| project ResourceId,ActivityName, Count, Status\r\n| order by Count desc; \n",
+                  "isOptional": true
+                },
+                {
+                  "name": "PartTitle",
+                  "value": "Analytics",
+                  "isOptional": true
+                },
+                {
+                  "name": "PartSubTitle",
+                  "value": "${dmp_log_analytics_workspace_name}",
+                  "isOptional": true
+                },
+                {
+                  "name": "PartId",
+                  "value": "95fe7208-08f1-4b5c-97e7-4366b141d44d",
+                  "isOptional": true
+                },
+                {
+                  "name": "Version",
+                  "value": "1.0",
+                  "isOptional": true
+                },
+                {
+                  "name": "resourceTypeMode",
+                  "value": "workspace",
+                  "isOptional": true
+                },
+                {
+                  "name": "TimeRange",
+                  "isOptional": true
+                },
+                {
+                  "name": "DashboardId",
+                  "isOptional": true
+                },
+                {
+                  "name": "ControlType",
+                  "value": "AnalyticsGrid",
+                  "isOptional": true
+                },
+                {
+                  "name": "SpecificChart",
+                  "isOptional": true
+                }
+              ],
+              "type": "Extension/Microsoft_OperationsManagementSuite_Workspace/PartType/LogsDashboardPart",
+              "settings": {
+                "content": {
+                  "PartSubTitle": "${dmp_log_analytics_workspace_name}",
+                  "PartTitle": "Activity Runs"
+                }
+              }
+            }
+          },
+          "19": {
+            "position": {
+              "x": 12,
+              "y": 8,
+              "colSpan": 5,
+              "rowSpan": 4
+            },
+            "metadata": {
+              "inputs": [
+                {
+                  "name": "ComponentId",
+                  "value": {
+                    "Name": "${dmp_log_analytics_workspace_name}",
+                    "ResourceGroup": "${ingest_resource_group_name}",
+                    "ResourceId": "/subscriptions/${subscription_id}/resourcegroups/${ingest_resource_group_name}/providers/microsoft.operationalinsights/workspaces/${dmp_log_analytics_workspace_name}",
+                    "SubscriptionId": "${subscription_id}"
+                  },
+                  "isOptional": true
+                },
+                {
+                  "name": "Dimensions",
+                  "isOptional": true
+                },
+                {
+                  "name": "Query",
+                  "value": "let data = ADFTriggerRun\r\n| where TimeGenerated > ago(2d)\r\n| where Status != \"Running\" and Status !contains \"Waiting\";\r\ndata\r\n| summarize Count = count() by ResourceId, Status, TriggerName\r\n| join kind = inner\r\n(\r\n    data\r\n    | make-series Trend = count()  default = 0 on TimeGenerated from ago(2d) to now() step 1h by ResourceId, Status, TriggerName\r\n    | project-away TimeGenerated\r\n)\r\non ResourceId, Status, TriggerName\r\n| project ResourceId,TriggerName, Count, Status\r\n| order by Count desc;\n",
+                  "isOptional": true
+                },
+                {
+                  "name": "PartTitle",
+                  "value": "Analytics",
+                  "isOptional": true
+                },
+                {
+                  "name": "PartSubTitle",
+                  "value": "${dmp_log_analytics_workspace_name}",
+                  "isOptional": true
+                },
+                {
+                  "name": "PartId",
+                  "value": "38a9aae8-914d-439a-a15b-88868718b678",
+                  "isOptional": true
+                },
+                {
+                  "name": "Version",
+                  "value": "1.0",
+                  "isOptional": true
+                },
+                {
+                  "name": "resourceTypeMode",
+                  "value": "workspace",
+                  "isOptional": true
+                },
+                {
+                  "name": "TimeRange",
+                  "isOptional": true
+                },
+                {
+                  "name": "DashboardId",
+                  "isOptional": true
+                },
+                {
+                  "name": "ControlType",
+                  "value": "AnalyticsGrid",
+                  "isOptional": true
+                },
+                {
+                  "name": "SpecificChart",
+                  "isOptional": true
+                }
+              ],
+              "type": "Extension/Microsoft_OperationsManagementSuite_Workspace/PartType/LogsDashboardPart",
+              "settings": {
+                "content": {
+                  "PartSubTitle": "${dmp_log_analytics_workspace_name}",
+                  "PartTitle": "Trigger Runs"
+                }
+              }
+            }
+          },
+          "20": {
+            "position": {
+              "x": 17,
+              "y": 8,
+              "colSpan": 5,
+              "rowSpan": 4
+            },
+            "metadata": {
+              "inputs": [
+                {
+                  "name": "ComponentId",
+                  "value": {
+                    "Name": "${dmp_log_analytics_workspace_name}",
+                    "ResourceGroup": "${ingest_resource_group_name}",
+                    "ResourceId": "/subscriptions/${subscription_id}/resourcegroups/${ingest_resource_group_name}/providers/microsoft.operationalinsights/workspaces/${dmp_log_analytics_workspace_name}",
+                    "SubscriptionId": "${subscription_id}"
+                  },
+                  "isOptional": true
+                },
+                {
+                  "name": "Dimensions",
+                  "isOptional": true
+                },
+                {
+                  "name": "Query",
+                  "value": "let data = ADFPipelineRun\r\n| where TimeGenerated > ago(2d)\r\n| where Status == \"Failed\"\r\n| where FailureType <> \"SystemError\";\r\ndata\r\n| summarize Count = count() by ResourceId, FailureType, PipelineName\r\n| join kind = inner\r\n(\r\n    data\r\n    | make-series Trend = count()  default = 0 on TimeGenerated from ago(2d) to now() step 1h by ResourceId, FailureType, PipelineName\r\n    | project-away TimeGenerated\r\n)\r\non ResourceId, FailureType, PipelineName\r\n| project ResourceId,PipelineName, Count,  FailureType\r\n| order by Count desc; \n",
+                  "isOptional": true
+                },
+                {
+                  "name": "PartTitle",
+                  "value": "Analytics",
+                  "isOptional": true
+                },
+                {
+                  "name": "PartSubTitle",
+                  "value": "${dmp_log_analytics_workspace_name}",
+                  "isOptional": true
+                },
+                {
+                  "name": "PartId",
+                  "value": "120a1113-1276-4aeb-b2c7-f00c7ad75292",
+                  "isOptional": true
+                },
+                {
+                  "name": "Version",
+                  "value": "1.0",
+                  "isOptional": true
+                },
+                {
+                  "name": "resourceTypeMode",
+                  "value": "workspace",
+                  "isOptional": true
+                },
+                {
+                  "name": "TimeRange",
+                  "isOptional": true
+                },
+                {
+                  "name": "DashboardId",
+                  "isOptional": true
+                },
+                {
+                  "name": "ControlType",
+                  "value": "AnalyticsGrid",
+                  "isOptional": true
+                },
+                {
+                  "name": "SpecificChart",
+                  "isOptional": true
+                }
+              ],
+              "type": "Extension/Microsoft_OperationsManagementSuite_Workspace/PartType/LogsDashboardPart",
+              "settings": {
+                "content": {
+                  "PartSubTitle": "${dmp_log_analytics_workspace_name}",
+                  "PartTitle": "Failed Pipeline Runs"
+                }
+              }
+            }
+          },
+          "21": {
+            "position": {
+              "x": 22,
+              "y": 8,
+              "colSpan": 5,
+              "rowSpan": 4
+            },
+            "metadata": {
+              "inputs": [
+                {
+                  "name": "ComponentId",
+                  "value": {
+                    "Name": "${dmp_log_analytics_workspace_name}",
+                    "ResourceGroup": "${ingest_resource_group_name}",
+                    "ResourceId": "/subscriptions/${subscription_id}/resourcegroups/${ingest_resource_group_name}/providers/microsoft.operationalinsights/workspaces/${dmp_log_analytics_workspace_name}",
+                    "SubscriptionId": "${subscription_id}"
+                  },
+                  "isOptional": true
+                },
+                {
+                  "name": "Dimensions",
+                  "isOptional": true
+                },
+                {
+                  "name": "Query",
+                  "value": "let data = ADFActivityRun\r\n| where TimeGenerated > ago(2d)\r\n| where Status == \"Failed\";\r\ndata\r\n| summarize Count = count() by ResourceId, FailureType, ActivityName\r\n| join kind = inner\r\n(\r\n    data\r\n    | make-series Trend = count()  default = 0 on TimeGenerated from ago(2d) to now() step 1h by ResourceId, FailureType, ActivityName\r\n    | project-away TimeGenerated\r\n)\r\non ResourceId, FailureType, ActivityName\r\n| where FailureType == \"UserError\"\r\n| project ResourceId, Count,ActivityName , FailureType\r\n| order by Count desc; \n",
+                  "isOptional": true
+                },
+                {
+                  "name": "PartTitle",
+                  "value": "Analytics",
+                  "isOptional": true
+                },
+                {
+                  "name": "PartSubTitle",
+                  "value": "${dmp_log_analytics_workspace_name}",
+                  "isOptional": true
+                },
+                {
+                  "name": "PartId",
+                  "value": "12292295-6bee-4778-911d-89f7503e8bca",
+                  "isOptional": true
+                },
+                {
+                  "name": "Version",
+                  "value": "1.0",
+                  "isOptional": true
+                },
+                {
+                  "name": "resourceTypeMode",
+                  "value": "workspace",
+                  "isOptional": true
+                },
+                {
+                  "name": "TimeRange",
+                  "isOptional": true
+                },
+                {
+                  "name": "DashboardId",
+                  "isOptional": true
+                },
+                {
+                  "name": "ControlType",
+                  "value": "AnalyticsGrid",
+                  "isOptional": true
+                },
+                {
+                  "name": "SpecificChart",
+                  "isOptional": true
+                }
+              ],
+              "type": "Extension/Microsoft_OperationsManagementSuite_Workspace/PartType/LogsDashboardPart",
+              "settings": {
+                "content": {
+                  "PartSubTitle": "${dmp_log_analytics_workspace_name}",
+                  "PartTitle": "Failed Activity Runs"
+                }
+              }
+            }
+          },
+          "22": {
+            "position": {
+              "x": 27,
+              "y": 8,
+              "colSpan": 6,
+              "rowSpan": 4
+            },
+            "metadata": {
+              "inputs": [
+                {
+                  "name": "ComponentId",
+                  "value": {
+                    "Name": "${dmp_log_analytics_workspace_name}",
+                    "ResourceGroup": "${ingest_resource_group_name}",
+                    "ResourceId": "/subscriptions/${subscription_id}/resourcegroups/${ingest_resource_group_name}/providers/microsoft.operationalinsights/workspaces/${dmp_log_analytics_workspace_name}",
+                    "SubscriptionId": "${subscription_id}"
+                  },
+                  "isOptional": true
+                },
+                {
+                  "name": "Dimensions",
+                  "isOptional": true
+                },
+                {
+                  "name": "Query",
+                  "value": "let data = ADFActivityRun\r\n| where TimeGenerated > ago(2d)\r\n| where Status != \"InProgress\";\r\ndata\r\n| summarize Count = count() by ResourceId, ActivityType\r\n| project ResourceId, ActivityType, Count\r\n| order by Count desc; \r\n",
+                  "isOptional": true
+                },
+                {
+                  "name": "PartTitle",
+                  "value": "Analytics",
+                  "isOptional": true
+                },
+                {
+                  "name": "PartSubTitle",
+                  "value": "${dmp_log_analytics_workspace_name}",
+                  "isOptional": true
+                },
+                {
+                  "name": "PartId",
+                  "value": "9b05180c-5d38-4a6e-982a-49eef110b53e",
+                  "isOptional": true
+                },
+                {
+                  "name": "Version",
+                  "value": "1.0",
+                  "isOptional": true
+                },
+                {
+                  "name": "resourceTypeMode",
+                  "value": "workspace",
+                  "isOptional": true
+                },
+                {
+                  "name": "TimeRange",
+                  "isOptional": true
+                },
+                {
+                  "name": "DashboardId",
+                  "isOptional": true
+                },
+                {
+                  "name": "ControlType",
+                  "value": "AnalyticsGrid",
+                  "isOptional": true
+                },
+                {
+                  "name": "SpecificChart",
+                  "isOptional": true
+                }
+              ],
+              "type": "Extension/Microsoft_OperationsManagementSuite_Workspace/PartType/LogsDashboardPart",
+              "settings": {
+                "content": {
+                  "GridColumnsWidth": {
+                    "ActivityType": "260px"
+                  },
+                  "PartSubTitle": "${dmp_log_analytics_workspace_name}",
+                  "PartTitle": "Statistics By Activity Type"
+                }
+              }
+            }
+          },
+          "23": {
+            "position": {
+              "x": 33,
+              "y": 8,
+              "colSpan": 6,
+              "rowSpan": 4
+            },
+            "metadata": {
+              "inputs": [
+                {
+                  "name": "ComponentId",
+                  "value": {
+                    "Name": "${dmp_log_analytics_workspace_name}",
+                    "ResourceGroup": "${ingest_resource_group_name}",
+                    "ResourceId": "/subscriptions/${subscription_id}/resourcegroups/${ingest_resource_group_name}/providers/microsoft.operationalinsights/workspaces/${dmp_log_analytics_workspace_name}",
+                    "SubscriptionId": "${subscription_id}"
+                  },
+                  "isOptional": true
+                },
+                {
+                  "name": "Dimensions",
+                  "isOptional": true
+                },
+                {
+                  "name": "Query",
+                  "value": "let data = ADFTriggerRun\r\n| where TimeGenerated > ago(2d);\r\ndata\r\n| summarize Count = count() by ResourceId, TriggerType, Status\r\n| project ResourceId, TriggerType, Status, Count\r\n| order by Count desc;\n",
+                  "isOptional": true
+                },
+                {
+                  "name": "PartTitle",
+                  "value": "Analytics",
+                  "isOptional": true
+                },
+                {
+                  "name": "PartSubTitle",
+                  "value": "${dmp_log_analytics_workspace_name}",
+                  "isOptional": true
+                },
+                {
+                  "name": "PartId",
+                  "value": "1a4d6f1a-4f7f-4669-8a94-2c13c2286b33",
+                  "isOptional": true
+                },
+                {
+                  "name": "Version",
+                  "value": "1.0",
+                  "isOptional": true
+                },
+                {
+                  "name": "resourceTypeMode",
+                  "value": "workspace",
+                  "isOptional": true
+                },
+                {
+                  "name": "TimeRange",
+                  "isOptional": true
+                },
+                {
+                  "name": "DashboardId",
+                  "isOptional": true
+                },
+                {
+                  "name": "ControlType",
+                  "value": "AnalyticsGrid",
+                  "isOptional": true
+                },
+                {
+                  "name": "SpecificChart",
+                  "isOptional": true
+                }
+              ],
+              "type": "Extension/Microsoft_OperationsManagementSuite_Workspace/PartType/LogsDashboardPart",
+              "settings": {
+                "content": {
+                  "PartSubTitle": "${dmp_log_analytics_workspace_name}",
+                  "PartTitle": "Statistics By Trigger Type"
+                }
+              }
+            }
+          },
+               "24": {
+    "position": {
+      "x": 39,
+      "y": 8,
+      "colSpan": 6,
+      "rowSpan": 4
+    },
+    "metadata": {
+      "inputs": [
+        {
+          "name": "resourceTypeMode",
+          "isOptional": true
+        },
+        {
+          "name": "ComponentId",
+          "isOptional": true
+        },
+        {
+          "name": "Scope",
+          "value": {
+            "resourceIds": [
+                "/subscriptions/${subscription_id}/resourcegroups/${ingest_resource_group_name}/providers/microsoft.operationalinsights/workspaces/${dmp_log_analytics_workspace_name}"
+            ]
+          },
+          "isOptional": true
+        },
+        {
+          "name": "Dimensions",
+          "value": {
+            "xAxis": {
+              "name": "Status",
+              "type": "string"
+            },
+            "yAxis": [
+              {
+                "name": "count_",
+                "type": "long"
+              }
+            ],
+            "splitBy": [],
+            "aggregation": "Sum"
+          },
+          "isOptional": true
+        },
+        {
+          "name": "PartId",
+          "value": "051c66c1-25a3-4364-84bf-427082861377",
+          "isOptional": true
+        },
+        {
+          "name": "Version",
+          "value": "2.0",
+          "isOptional": true
+        },
+        {
+          "name": "TimeRange",
+          "value": "P1D",
+          "isOptional": true
+        },
+        {
+          "name": "DashboardId",
+          "isOptional": true
+        },
+        {
+          "name": "DraftRequestParameters",
+          "isOptional": true
+        },
+        {
+          "name": "Query",
+          "value": "ADFPipelineRun \r\n| where TimeGenerated > ago(24h) \r\n| summarize count() by Status\r\n| render piechart \r\n\n",
+          "isOptional": true
+        },
+        {
+          "name": "ControlType",
+          "value": "FrameControlChart",
+          "isOptional": true
+        },
+        {
+          "name": "SpecificChart",
+          "value": "Pie",
+          "isOptional": true
+        },
+        {
+          "name": "PartTitle",
+          "value": "Analytics",
+          "isOptional": true
+        },
+        {
+          "name": "PartSubTitle",
+          "value": "${dmp_log_analytics_workspace_name}",
+          "isOptional": true
+        }
+      ],
+      "type": "Extension/Microsoft_OperationsManagementSuite_Workspace/PartType/LogsDashboardPart",
+      "settings": {
+        "content": {
+          "PartTitle": "ADFPipelineRun by Status",
+          "PartSubTitle": "${dmp_log_analytics_workspace_name}"
+        }
+      }
+    }
+  },
+  "25": {
+    "position": {
+      "x": 45,
+      "y": 8,
+      "colSpan": 6,
+      "rowSpan": 4
+    },
+    "metadata": {
+      "inputs": [
+        {
+          "name": "resourceTypeMode",
+          "isOptional": true
+        },
+        {
+          "name": "ComponentId",
+          "isOptional": true
+        },
+        {
+          "name": "Scope",
+          "value": {
+            "resourceIds": [
+                "/subscriptions/${subscription_id}/resourcegroups/${ingest_resource_group_name}/providers/microsoft.operationalinsights/workspaces/${dmp_log_analytics_workspace_name}"
+            ]
+          },
+          "isOptional": true
+        },
+        {
+          "name": "Dimensions",
+          "isOptional": true
+        },
+        {
+          "name": "PartId",
+          "value": "0aeba34d-529a-4c1d-80dc-12ad60ab2e0c",
+          "isOptional": true
+        },
+        {
+          "name": "Version",
+          "value": "2.0",
+          "isOptional": true
+        },
+        {
+          "name": "TimeRange",
+          "value": "P1D",
+          "isOptional": true
+        },
+        {
+          "name": "DashboardId",
+          "isOptional": true
+        },
+        {
+          "name": "DraftRequestParameters",
+          "isOptional": true
+        },
+        {
+          "name": "Query",
+          "value": "ADFPipelineRun \r\n| where TimeGenerated > ago(48h) \r\n| where Status == \"Failed\"\r\n| where FailureType <> \"SystemError\"\r\n| summarize by PipelineName, FailureType, TimeGenerated\r\n\n",
+          "isOptional": true
+        },
+        {
+          "name": "ControlType",
+          "value": "AnalyticsGrid",
+          "isOptional": true
+        },
+        {
+          "name": "SpecificChart",
+          "isOptional": true
+        },
+        {
+          "name": "PartTitle",
+          "value": "Analytics",
+          "isOptional": true
+        },
+        {
+          "name": "PartSubTitle",
+          "value": "${dmp_log_analytics_workspace_name}",
+          "isOptional": true
+        }
+      ],
+      "type": "Extension/Microsoft_OperationsManagementSuite_Workspace/PartType/LogsDashboardPart",
+      "settings": {
+        "content": {
+          "PartTitle": "ADFPipelineRun by Failed Pipelines",
+          "PartSubTitle": "${dmp_log_analytics_workspace_name}"
+        }
+      }
+    }
+  },
+          "26": {
+            "position": {
+              "x": 0,
+              "y": 12,
+              "colSpan": 2,
+              "rowSpan": 4
+            },
+            "metadata": {
+              "inputs": [],
+              "type": "Extension/HubsExtension/PartType/MarkdownPart",
+              "settings": {
+                "content": {
+                  "settings": {
+                    "content": "<br><br>\n<strong><em>Azure Key Vault</em></storng>\n<br>\n<a href='https://portal.azure.com/#@${tenant_id}/resource/subscriptions/${subscription_id}/resourceGroups/${ingest_resource_group_name}/providers/Microsoft.KeyVault/vaults/${dmp_runway_key_vault_name}/overview' target='_blank'>${dmp_runway_key_vault_name}</a><br>\n<br><br>\n<em><a href='https://portal.azure.com/#@8331e14a-9134-4288-bf5a-5e2c8412f074/resource/subscriptions/60b60000-6cbd-4c1b-94b3-2440bd6bbe00/resourceGroups/rg-DMPEnterpriseDataIngestion-build-001/providers/Microsoft.KeyVault/vaults/dmp-kv-runway-build-001/analytics' target='_blank'>Log Analytics Link with Key Vault scope</a></em>\n<br><Br>\n<a href='https://docs.microsoft.com/en-us/azure/azure-resource-manager/management/azure-subscription-service-limits#key-vault-limits' target='_blank'>Key Vault Limits</a>\n<br><a href='https://docs.microsoft.com/en-us/azure/key-vault/' target='_blank'>Key Vault Documentation</a>\n\n",
+                    "markdownSource": 1,
+                    "subtitle": "",
+                    "title": ""
+                  }
+                }
+              }
+            }
+          },
+          "27": {
+            "position": {
+              "x": 2,
+              "y": 12,
+              "colSpan": 5,
+              "rowSpan": 4
+            },
+            "metadata": {
+              "inputs": [
+                {
+                  "name": "ComponentId",
+                  "value": {
+                    "Name": "${dmp_log_analytics_workspace_name}",
+                    "ResourceGroup": "${ingest_resource_group_name}",
+                    "ResourceId": "/subscriptions/${subscription_id}/resourcegroups/${ingest_resource_group_name}/providers/microsoft.operationalinsights/workspaces/${dmp_log_analytics_workspace_name}",
+                    "SubscriptionId": "${subscription_id}"
+                  },
+                  "isOptional": true
+                },
+                {
+                  "name": "Dimensions",
+                  "value": {
+                    "aggregation": "Sum",
+                    "splitBy": [],
+                    "xAxis": {
+                      "name": "OperationName",
+                      "type": "string"
+                    },
+                    "yAxis": [
+                      {
+                        "name": "No_of_Operations",
+                        "type": "long"
+                      }
+                    ]
+                  },
+                  "isOptional": true
+                },
+                {
+                  "name": "Query",
+                  "value": "AzureDiagnostics\r\n| where ResourceProvider==\"MICROSOFT.KEYVAULT\"\r\n| summarize No_of_Operations=count() by OperationName\n",
+                  "isOptional": true
+                },
+                {
+                  "name": "PartTitle",
+                  "value": "Analytics",
+                  "isOptional": true
+                },
+                {
+                  "name": "PartSubTitle",
+                  "value": "${dmp_log_analytics_workspace_name}",
+                  "isOptional": true
+                },
+                {
+                  "name": "PartId",
+                  "value": "1a27d2b3-6088-4548-9136-7a5a90518bf5",
+                  "isOptional": true
+                },
+                {
+                  "name": "Version",
+                  "value": "1.0",
+                  "isOptional": true
+                },
+                {
+                  "name": "resourceTypeMode",
+                  "value": "workspace",
+                  "isOptional": true
+                },
+                {
+                  "name": "TimeRange",
+                  "value": "P1D",
+                  "isOptional": true
+                },
+                {
+                  "name": "DashboardId",
+                  "isOptional": true
+                },
+                {
+                  "name": "ControlType",
+                  "value": "FrameControlChart",
+                  "isOptional": true
+                },
+                {
+                  "name": "SpecificChart",
+                  "value": "Donut",
+                  "isOptional": true
+                }
+              ],
+              "type": "Extension/Microsoft_OperationsManagementSuite_Workspace/PartType/LogsDashboardPart",
+              "settings": {
+                "content": {
+                  "PartSubTitle": "${dmp_log_analytics_workspace_name}",
+                  "PartTitle": "Statistics by Operation"
+                }
+              }
+            }
+          },
+          "28": {
+            "position": {
+              "x": 7,
+              "y": 12,
+              "colSpan": 5,
+              "rowSpan": 4
+            },
+            "metadata": {
+              "inputs": [
+                {
+                  "name": "ComponentId",
+                  "value": {
+                    "SubscriptionId": "${subscription_id}",
+                    "ResourceGroup": "${ingest_resource_group_name}",
+                    "Name": "${dmp_runway_key_vault_name}",
+                    "ResourceId": "/subscriptions/${subscription_id}/resourceGroups/${ingest_resource_group_name}/providers/Microsoft.KeyVault/vaults/${dmp_runway_key_vault_name}"
+                  },
+                  "isOptional": true
+                },
+                {
+                  "name": "Dimensions",
+                  "isOptional": true
+                },
+                {
+                  "name": "Query",
+                  "value": "AzureDiagnostics\n| where ResourceProvider == 'MICROSOFT.KEYVAULT'\n| project TimeGenerated,requestUri_s, OperationName, ResultSignature,  identity_claim_appid_g,clientInfo_s,DurationMs\n| order by TimeGenerated desc\n",
+                  "isOptional": true
+                },
+                {
+                  "name": "PartTitle",
+                  "value": "Analytics",
+                  "isOptional": true
+                },
+                {
+                  "name": "PartSubTitle",
+                  "value": "${dmp_runway_key_vault_name}",
+                  "isOptional": true
+                },
+                {
+                  "name": "PartId",
+                  "value": "2eae169d-6633-40c3-b477-fd0f547df529",
+                  "isOptional": true
+                },
+                {
+                  "name": "Version",
+                  "value": "1.0",
+                  "isOptional": true
+                },
+                {
+                  "name": "resourceTypeMode",
+                  "value": "azureFirst",
+                  "isOptional": true
+                },
+                {
+                  "name": "TimeRange",
+                  "value": "P1D",
+                  "isOptional": true
+                },
+                {
+                  "name": "DashboardId",
+                  "isOptional": true
+                },
+                {
+                  "name": "ControlType",
+                  "value": "AnalyticsGrid",
+                  "isOptional": true
+                },
+                {
+                  "name": "SpecificChart",
+                  "isOptional": true
+                }
+              ],
+              "type": "Extension/Microsoft_OperationsManagementSuite_Workspace/PartType/LogsDashboardPart",
+              "settings": {
+                "content": {
+                  "PartTitle": "Activity Logs",
+                  "PartSubTitle": "${dmp_runway_key_vault_name}"
+                }
+              }
+            }
+          },
+          "29": {
+            "position": {
+              "x": 12,
+              "y": 12,
+              "colSpan": 5,
+              "rowSpan": 4
+            },
+            "metadata": {
+              "inputs": [
+                {
+                  "name": "ComponentId",
+                  "value": {
+                    "Name": "${dmp_log_analytics_workspace_name}",
+                    "ResourceGroup": "${ingest_resource_group_name}",
+                    "ResourceId": "/subscriptions/${subscription_id}/resourcegroups/${ingest_resource_group_name}/providers/microsoft.operationalinsights/workspaces/${dmp_log_analytics_workspace_name}",
+                    "SubscriptionId": "${subscription_id}"
+                  },
+                  "isOptional": true
+                },
+                {
+                  "name": "Dimensions",
+                  "value": {
+                    "aggregation": "Sum",
+                    "splitBy": [],
+                    "xAxis": {
+                      "name": "ResultSignature",
+                      "type": "string"
+                    },
+                    "yAxis": [
+                      {
+                        "name": "No_of_Operations",
+                        "type": "long"
+                      }
+                    ]
+                  },
+                  "isOptional": true
+                },
+                {
+                  "name": "Query",
+                  "value": "AzureDiagnostics\r\n| where ResourceProvider==\"MICROSOFT.KEYVAULT\"\r\n| summarize No_of_Operations=count() by  ResultSignature\n",
+                  "isOptional": true
+                },
+                {
+                  "name": "PartTitle",
+                  "value": "Analytics",
+                  "isOptional": true
+                },
+                {
+                  "name": "PartSubTitle",
+                  "value": "${dmp_log_analytics_workspace_name}",
+                  "isOptional": true
+                },
+                {
+                  "name": "PartId",
+                  "value": "1248e84d-7ca0-42a7-b87d-20161c12452f",
+                  "isOptional": true
+                },
+                {
+                  "name": "Version",
+                  "value": "1.0",
+                  "isOptional": true
+                },
+                {
+                  "name": "resourceTypeMode",
+                  "value": "workspace",
+                  "isOptional": true
+                },
+                {
+                  "name": "TimeRange",
+                  "value": "P1D",
+                  "isOptional": true
+                },
+                {
+                  "name": "DashboardId",
+                  "isOptional": true
+                },
+                {
+                  "name": "ControlType",
+                  "value": "FrameControlChart",
+                  "isOptional": true
+                },
+                {
+                  "name": "SpecificChart",
+                  "value": "Donut",
+                  "isOptional": true
+                }
+              ],
+              "type": "Extension/Microsoft_OperationsManagementSuite_Workspace/PartType/LogsDashboardPart",
+              "settings": {
+                "content": {
+                  "PartSubTitle": "${dmp_log_analytics_workspace_name}",
+                  "PartTitle": "Statistics by Request Response"
+                }
+              }
+            }
+          },
+          "30": {
+            "position": {
+              "x": 17,
+              "y": 12,
+              "colSpan": 5,
+              "rowSpan": 4
+            },
+            "metadata": {
+              "inputs": [
+                {
+                  "name": "ComponentId",
+                  "value": {
+                    "Name": "${dmp_log_analytics_workspace_name}",
+                    "ResourceGroup": "${ingest_resource_group_name}",
+                    "ResourceId": "/subscriptions/${subscription_id}/resourcegroups/${ingest_resource_group_name}/providers/microsoft.operationalinsights/workspaces/${dmp_log_analytics_workspace_name}",
+                    "SubscriptionId": "${subscription_id}"
+                  },
+                  "isOptional": true
+                },
+                {
+                  "name": "Dimensions",
+                  "value": {
+                    "aggregation": "Sum",
+                    "splitBy": [],
+                    "xAxis": {
+                      "name": "CallerIPAddress",
+                      "type": "string"
+                    },
+                    "yAxis": [
+                      {
+                        "name": "No_of_Operations",
+                        "type": "long"
+                      }
+                    ]
+                  },
+                  "isOptional": true
+                },
+                {
+                  "name": "Query",
+                  "value": "AzureDiagnostics\r\n| where ResourceProvider==\"MICROSOFT.KEYVAULT\"\r\n| summarize No_of_Operations = count() by CallerIPAddress\r\n",
+                  "isOptional": true
+                },
+                {
+                  "name": "PartTitle",
+                  "value": "Analytics",
+                  "isOptional": true
+                },
+                {
+                  "name": "PartSubTitle",
+                  "value": "${dmp_log_analytics_workspace_name}",
+                  "isOptional": true
+                },
+                {
+                  "name": "PartId",
+                  "value": "1572585b-1439-4a8e-8860-7e86cb693876",
+                  "isOptional": true
+                },
+                {
+                  "name": "Version",
+                  "value": "1.0",
+                  "isOptional": true
+                },
+                {
+                  "name": "resourceTypeMode",
+                  "value": "workspace",
+                  "isOptional": true
+                },
+                {
+                  "name": "TimeRange",
+                  "value": "P1D",
+                  "isOptional": true
+                },
+                {
+                  "name": "DashboardId",
+                  "isOptional": true
+                },
+                {
+                  "name": "ControlType",
+                  "value": "FrameControlChart",
+                  "isOptional": true
+                },
+                {
+                  "name": "SpecificChart",
+                  "value": "Pie",
+                  "isOptional": true
+                }
+              ],
+              "type": "Extension/Microsoft_OperationsManagementSuite_Workspace/PartType/LogsDashboardPart",
+              "settings": {
+                "content": {
+                  "PartSubTitle": "${dmp_log_analytics_workspace_name}",
+                  "PartTitle": "Statistics by CallerIPAddress"
+                }
+              }
+            }
+          },
+          "31": {
+            "position": {
+              "x": 22,
+              "y": 12,
+              "colSpan": 5,
+              "rowSpan": 4
+            },
+            "metadata": {
+              "inputs": [
+                {
+                  "name": "ComponentId",
+                  "value": {
+                    "SubscriptionId": "${subscription_id}",
+                    "ResourceGroup": "${ingest_resource_group_name}",
+                    "Name": "${dmp_log_analytics_workspace_name}",
+                    "ResourceId": "/subscriptions/${subscription_id}/resourcegroups/${ingest_resource_group_name}/providers/microsoft.operationalinsights/workspaces/${dmp_log_analytics_workspace_name}"
+                  },
+                  "isOptional": true
+                },
+                {
+                  "name": "Dimensions",
+                  "value": {
+                    "xAxis": {
+                      "name": "httpStatusCode_d",
+                      "type": "real"
+                    },
+                    "yAxis": [
+                      {
+                        "name": "DurationMs",
+                        "type": "long"
+                      }
+                    ],
+                    "splitBy": [
+                      {
+                        "name": "CallerIPAddress",
+                        "type": "string"
+                      }
+                    ],
+                    "aggregation": "Maximum"
+                  },
+                  "isOptional": true
+                },
+                {
+                  "name": "Query",
+                  "value": "AzureDiagnostics\r\n| where  ResourceProvider ==\"MICROSOFT.KEYVAULT\"\r\n| where httpStatusCode_d > 400\n",
+                  "isOptional": true
+                },
+                {
+                  "name": "PartTitle",
+                  "value": "Analytics",
+                  "isOptional": true
+                },
+                {
+                  "name": "PartSubTitle",
+                  "value": "${dmp_log_analytics_workspace_name}",
+                  "isOptional": true
+                },
+                {
+                  "name": "PartId",
+                  "value": "1467f7a1-1363-4c97-8152-96f989313270",
+                  "isOptional": true
+                },
+                {
+                  "name": "Version",
+                  "value": "1.0",
+                  "isOptional": true
+                },
+                {
+                  "name": "resourceTypeMode",
+                  "value": "workspace",
+                  "isOptional": true
+                },
+                {
+                  "name": "TimeRange",
+                  "value": "P1D",
+                  "isOptional": true
+                },
+                {
+                  "name": "DashboardId",
+                  "isOptional": true
+                },
+                {
+                  "name": "ControlType",
+                  "value": "FrameControlChart",
+                  "isOptional": true
+                },
+                {
+                  "name": "SpecificChart",
+                  "value": "StackedColumn",
+                  "isOptional": true
+                }
+              ],
+              "type": "Extension/Microsoft_OperationsManagementSuite_Workspace/PartType/LogsDashboardPart",
+              "settings": {
+                "content": {
+                  "PartTitle": "Http Codes by Caller IP address",
+                  "PartSubTitle": "${dmp_log_analytics_workspace_name}"
+                }
+              }
+            }
+          },
+          "32": {
+            "position": {
+              "x": 27,
+              "y": 12,
+              "colSpan": 6,
+              "rowSpan": 4
+            },
+            "metadata": {
+              "inputs": [
+                {
+                  "name": "ComponentId",
+                  "value": {
+                    "SubscriptionId": "${subscription_id}",
+                    "ResourceGroup": "${ingest_resource_group_name}",
+                    "Name": "${dmp_runway_key_vault_name}",
+                    "ResourceId": "/subscriptions/${subscription_id}/resourceGroups/${ingest_resource_group_name}/providers/Microsoft.KeyVault/vaults/${dmp_runway_key_vault_name}"
+                  },
+                  "isOptional": true
+                },
+                {
+                  "name": "Dimensions",
+                  "value": {
+                    "xAxis": {
+                      "name": "TimeGenerated",
+                      "type": "datetime"
+                    },
+                    "yAxis": [
+                      {
+                        "name": "count_",
+                        "type": "long"
+                      }
+                    ],
+                    "splitBy": [
+                      {
+                        "name": "OperationName",
+                        "type": "string"
+                      }
+                    ],
+                    "aggregation": "Sum"
+                  },
+                  "isOptional": true
+                },
+                {
+                  "name": "Query",
+                  "value": "// How active has this KeyVault been? \n// Line chart showing trend of KeyVault requests volume, per operation over time. \n// KeyVault diagnostic currently stores logs in AzureDiagnostics table which stores logs for multiple services. \n// Filter on ResourceProvider for logs specific to a service.\nAzureDiagnostics\n| where ResourceProvider ==\"MICROSOFT.KEYVAULT\" \n| summarize count() by bin(TimeGenerated, 1h), OperationName // Aggregate by hour\n| render timechart\n",
+                  "isOptional": true
+                },
+                {
+                  "name": "PartTitle",
+                  "value": "Analytics",
+                  "isOptional": true
+                },
+                {
+                  "name": "PartSubTitle",
+                  "value": "${dmp_runway_key_vault_name}",
+                  "isOptional": true
+                },
+                {
+                  "name": "PartId",
+                  "value": "147e37db-9c8b-4726-b015-951b7215580d",
+                  "isOptional": true
+                },
+                {
+                  "name": "Version",
+                  "value": "1.0",
+                  "isOptional": true
+                },
+                {
+                  "name": "resourceTypeMode",
+                  "value": "azureFirst",
+                  "isOptional": true
+                },
+                {
+                  "name": "TimeRange",
+                  "value": "P1D",
+                  "isOptional": true
+                },
+                {
+                  "name": "DashboardId",
+                  "isOptional": true
+                },
+                {
+                  "name": "ControlType",
+                  "value": "FrameControlChart",
+                  "isOptional": true
+                },
+                {
+                  "name": "SpecificChart",
+                  "value": "Line",
+                  "isOptional": true
+                }
+              ],
+              "type": "Extension/Microsoft_OperationsManagementSuite_Workspace/PartType/LogsDashboardPart",
+              "settings": {
+                "content": {
+                  "PartTitle": "KeyVault requests volume, per operation over time",
+                  "PartSubTitle": "${dmp_runway_key_vault_name}"
+                }
+              }
+            }
+          },
+          "33": {
+            "position": {
+              "x": 33,
+              "y": 12,
+              "colSpan": 6,
+              "rowSpan": 4
+            },
+            "metadata": {
+              "inputs": [
+                {
+                  "name": "ComponentId",
+                  "value": {
+                    "SubscriptionId": "${subscription_id}",
+                    "ResourceGroup": "${ingest_resource_group_name}",
+                    "Name": "${dmp_runway_key_vault_name}",
+                    "ResourceId": "/subscriptions/${subscription_id}/resourceGroups/${ingest_resource_group_name}/providers/Microsoft.KeyVault/vaults/${dmp_runway_key_vault_name}"
+                  },
+                  "isOptional": true
+                },
+                {
+                  "name": "Dimensions",
+                  "value": {
+                    "xAxis": {
+                      "name": "OperationName",
+                      "type": "string"
+                    },
+                    "yAxis": [
+                      {
+                        "name": "count_",
+                        "type": "long"
+                      }
+                    ],
+                    "splitBy": [],
+                    "aggregation": "Sum"
+                  },
+                  "isOptional": true
+                },
+                {
+                  "name": "Query",
+                  "value": "// Are there any slow requests? \n// List of KeyVault requests that took longer than 1sec. \nlet threshold=1000; // let operator defines a constant that can be further used in the query\nAzureDiagnostics\n| where ResourceProvider ==\"MICROSOFT.KEYVAULT\" \n| where DurationMs > threshold\n| summarize count() by OperationName\n",
+                  "isOptional": true
+                },
+                {
+                  "name": "PartTitle",
+                  "value": "Analytics",
+                  "isOptional": true
+                },
+                {
+                  "name": "PartSubTitle",
+                  "value": "${dmp_runway_key_vault_name}",
+                  "isOptional": true
+                },
+                {
+                  "name": "PartId",
+                  "value": "967d4821-a1ed-42f6-a969-7159c11b85cf",
+                  "isOptional": true
+                },
+                {
+                  "name": "Version",
+                  "value": "1.0",
+                  "isOptional": true
+                },
+                {
+                  "name": "resourceTypeMode",
+                  "value": "azureFirst",
+                  "isOptional": true
+                },
+                {
+                  "name": "TimeRange",
+                  "value": "P1D",
+                  "isOptional": true
+                },
+                {
+                  "name": "DashboardId",
+                  "isOptional": true
+                },
+                {
+                  "name": "ControlType",
+                  "value": "FrameControlChart",
+                  "isOptional": true
+                },
+                {
+                  "name": "SpecificChart",
+                  "value": "Donut",
+                  "isOptional": true
+                }
+              ],
+              "type": "Extension/Microsoft_OperationsManagementSuite_Workspace/PartType/LogsDashboardPart",
+              "settings": {
+                "content": {
+                  "PartTitle": "KeyVault requests that took longer than 1sec",
+                  "PartSubTitle": "${dmp_runway_key_vault_name}"
+                }
+              }
+            }
+          },
+          "34": {
+            "position": {
+              "x": 39,
+              "y": 12,
+              "colSpan": 8,
+              "rowSpan": 4
+            },
+            "metadata": {
+              "inputs": [
+                {
+                  "name": "ComponentId",
+                  "value": {
+                    "SubscriptionId": "${subscription_id}",
+                    "ResourceGroup": "${ingest_resource_group_name}",
+                    "Name": "${dmp_runway_key_vault_name}",
+                    "ResourceId": "/subscriptions/${subscription_id}/resourceGroups/${ingest_resource_group_name}/providers/Microsoft.KeyVault/vaults/${dmp_runway_key_vault_name}"
+                  },
+                  "isOptional": true
+                },
+                {
+                  "name": "Dimensions",
+                  "value": {
+                    "xAxis": {
+                      "name": "requestUri_s",
+                      "type": "string"
+                    },
+                    "yAxis": [
+                      {
+                        "name": "count_",
+                        "type": "long"
+                      }
+                    ],
+                    "splitBy": [],
+                    "aggregation": "Sum"
+                  },
+                  "isOptional": true
+                },
+                {
+                  "name": "Query",
+                  "value": "// How fast is this KeyVault serving requests? \n// Line chart showing trend of request duration over time using different aggregations.  \nAzureDiagnostics\n| where ResourceProvider ==\"MICROSOFT.KEYVAULT\" \n| where httpStatusCode_d >= 300 and not(OperationName == \"Authentication\" and httpStatusCode_d == 401)\n| summarize count() by requestUri_s, ResultSignature\n// ResultSignature contains HTTP status such as \"OK\" or \"Forbidden\".\n// httpStatusCode_d contains HTTP status code returned by the request such as 200 or 401.\n// requestUri_s contains the URI of the request.\n",
+                  "isOptional": true
+                },
+                {
+                  "name": "PartTitle",
+                  "value": "Analytics",
+                  "isOptional": true
+                },
+                {
+                  "name": "PartSubTitle",
+                  "value": "${dmp_runway_key_vault_name}",
+                  "isOptional": true
+                },
+                {
+                  "name": "PartId",
+                  "value": "20078fb3-235d-40aa-b0f5-f4e969ceb517",
+                  "isOptional": true
+                },
+                {
+                  "name": "Version",
+                  "value": "1.0",
+                  "isOptional": true
+                },
+                {
+                  "name": "resourceTypeMode",
+                  "value": "azureFirst",
+                  "isOptional": true
+                },
+                {
+                  "name": "TimeRange",
+                  "value": "P1D",
+                  "isOptional": true
+                },
+                {
+                  "name": "DashboardId",
+                  "isOptional": true
+                },
+                {
+                  "name": "ControlType",
+                  "value": "FrameControlChart",
+                  "isOptional": true
+                },
+                {
+                  "name": "SpecificChart",
+                  "value": "Pie",
+                  "isOptional": true
+                }
+              ],
+              "type": "Extension/Microsoft_OperationsManagementSuite_Workspace/PartType/LogsDashboardPart",
+              "settings": {
+                "content": {
+                  "PartTitle": "URIs of the forbidden requests",
+                  "PartSubTitle": "${dmp_runway_key_vault_name}"
+                }
+              }
+            }
+          },
+          "35": {
+            "position": {
+              "x": 0,
+              "y": 16,
+              "colSpan": 2,
+              "rowSpan": 4
+            },
+            "metadata": {
+              "inputs": [],
+              "type": "Extension/HubsExtension/PartType/MarkdownPart",
+              "settings": {
+                "content": {
+                  "settings": {
+                    "content": "<br><br>\n<strong><em>Azure Service Bus</em></storng>\n<br>\n<a href='https://portal.azure.com/#@kproductivity.onmicrosoft.com/resource/subscriptions/${subscription_id}/resourceGroups/${ingest_resource_group_name}/providers/Microsoft.ServiceBus/namespaces/${dmp_runway_servicebus_name}/overview' target='_blank'> ${dmp_runway_servicebus_name}</a><br>\n<br><br>\n<em><a href='https://portal.azure.com/#@kproductivity.onmicrosoft.com/resource/subscriptions/60b60000-6cbd-4c1b-94b3-2440bd6bbe00/resourceGroups/rg-DMPEnterpriseDataIngestion-build-001/providers/Microsoft.ServiceBus/namespaces/dmp-sbus-runway-build-001/analytics' target='_blank'>Log Analytics Link with Service Bus scope</a></em>\n<br><Br>\n<a href='https://docs.microsoft.com/en-us/azure/azure-resource-manager/management/azure-subscription-service-limits?WT.mc_id=Portal-fx#service-bus-limits' target='_blank'>Service Bus Limits</a>\n<br><a href='https://docs.microsoft.com/en-us/azure/service-bus-messaging/' target='_blank'>Service Bus Documentation</a>\n\n",
+                    "markdownSource": 1,
+                    "subtitle": "",
+                    "title": ""
+                  }
+                }
+              }
+            }
+          },
+          "36": {
+            "position": {
+              "x": 2,
+              "y": 16,
+              "colSpan": 5,
+              "rowSpan": 4
+            },
+            "metadata": {
+              "inputs": [
+                {
+                  "name": "ComponentId",
+                  "value": {
+                    "Name": "${dmp_runway_servicebus_name}",
+                    "ResourceGroup": "${ingest_resource_group_name}",
+                    "ResourceId": "/subscriptions/${subscription_id}/resourceGroups/${ingest_resource_group_name}/providers/Microsoft.ServiceBus/namespaces/${dmp_runway_servicebus_name}",
+                    "SubscriptionId": "${subscription_id}"
+                  },
+                  "isOptional": true
+                },
+                {
+                  "name": "Dimensions",
+                  "value": {
+                    "aggregation": "Sum",
+                    "splitBy": [
+                      {
+                        "name": "_ResourceId",
+                        "type": "string"
+                      }
+                    ],
+                    "xAxis": {
+                      "name": "EventName_s",
+                      "type": "string"
+                    },
+                    "yAxis": [
+                      {
+                        "name": "count_",
+                        "type": "long"
+                      }
+                    ]
+                  },
+                  "isOptional": true
+                },
+                {
+                  "name": "Query",
+                  "value": "// Management operations in the last 7 days \n// This lists all the management calls for the last 7 days. \nAzureDiagnostics\n| where TimeGenerated > ago(7d)\n| where ResourceProvider ==\"MICROSOFT.SERVICEBUS\"\n| where Category == \"OperationalLogs\"\n| summarize count() by EventName_s, _ResourceId\n",
+                  "isOptional": true
+                },
+                {
+                  "name": "PartTitle",
+                  "value": "Analytics",
+                  "isOptional": true
+                },
+                {
+                  "name": "PartSubTitle",
+                  "value": "${dmp_runway_servicebus_name}",
+                  "isOptional": true
+                },
+                {
+                  "name": "PartId",
+                  "value": "920077fd-9a76-4ed2-90f8-cfca864ee264",
+                  "isOptional": true
+                },
+                {
+                  "name": "Version",
+                  "value": "1.0",
+                  "isOptional": true
+                },
+                {
+                  "name": "resourceTypeMode",
+                  "value": "azureFirst",
+                  "isOptional": true
+                },
+                {
+                  "name": "TimeRange",
+                  "isOptional": true
+                },
+                {
+                  "name": "DashboardId",
+                  "isOptional": true
+                },
+                {
+                  "name": "ControlType",
+                  "value": "FrameControlChart",
+                  "isOptional": true
+                },
+                {
+                  "name": "SpecificChart",
+                  "value": "StackedColumn",
+                  "isOptional": true
+                }
+              ],
+              "type": "Extension/Microsoft_OperationsManagementSuite_Workspace/PartType/LogsDashboardPart",
+              "settings": {
+                "content": {
+                  "PartTitle": "Management Operations",
+                  "PartSubTitle": "${dmp_runway_servicebus_name}"
+                }
+              }
+            }
+          },
+          "37": {
+            "position": {
+              "x": 7,
+              "y": 16,
+              "colSpan": 5,
+              "rowSpan": 4
+            },
+            "metadata": {
+              "inputs": [
+                {
+                  "name": "ComponentId",
+                  "value": {
+                    "SubscriptionId": "${subscription_id}",
+                    "ResourceGroup": "${ingest_resource_group_name}",
+                    "Name": "${dmp_runway_servicebus_name}",
+                    "ResourceId": "/subscriptions/${subscription_id}/resourceGroups/${ingest_resource_group_name}/providers/Microsoft.ServiceBus/namespaces/${dmp_runway_servicebus_name}"
+                  },
+                  "isOptional": true
+                },
+                {
+                  "name": "Dimensions",
+                  "value": {
+                    "xAxis": {
+                      "name": "Status_s",
+                      "type": "string"
+                    },
+                    "yAxis": [
+                      {
+                        "name": "count_",
+                        "type": "long"
+                      }
+                    ],
+                    "splitBy": [],
+                    "aggregation": "Sum"
+                  },
+                  "isOptional": true
+                },
+                {
+                  "name": "Query",
+                  "value": "AzureDiagnostics \r\n|summarize count() by Status_s\n",
+                  "isOptional": true
+                },
+                {
+                  "name": "PartTitle",
+                  "value": "Analytics",
+                  "isOptional": true
+                },
+                {
+                  "name": "PartSubTitle",
+                  "value": "${dmp_runway_servicebus_name}",
+                  "isOptional": true
+                },
+                {
+                  "name": "PartId",
+                  "value": "27e969fd-acb7-41ef-b113-01a6c38ec3b3",
+                  "isOptional": true
+                },
+                {
+                  "name": "Version",
+                  "value": "1.0",
+                  "isOptional": true
+                },
+                {
+                  "name": "resourceTypeMode",
+                  "value": "azureFirst",
+                  "isOptional": true
+                },
+                {
+                  "name": "TimeRange",
+                  "value": "P1D",
+                  "isOptional": true
+                },
+                {
+                  "name": "DashboardId",
+                  "isOptional": true
+                },
+                {
+                  "name": "ControlType",
+                  "value": "FrameControlChart",
+                  "isOptional": true
+                },
+                {
+                  "name": "SpecificChart",
+                  "value": "Donut",
+                  "isOptional": true
+                }
+              ],
+              "type": "Extension/Microsoft_OperationsManagementSuite_Workspace/PartType/LogsDashboardPart",
+              "settings": {
+                "content": {
+                  "PartTitle": "Statistics by Status_s",
+                  "PartSubTitle": "${dmp_runway_servicebus_name}"
+                }
+              }
+            }
+          },
+          "38": {
+            "position": {
+              "x": 12,
+              "y": 16,
+              "colSpan": 5,
+              "rowSpan": 4
+            },
+            "metadata": {
+              "inputs": [
+                {
+                  "name": "ComponentId",
+                  "value": {
+                    "Name": "${dmp_log_analytics_workspace_name}",
+                    "ResourceGroup": "${ingest_resource_group_name}",
+                    "ResourceId": "/subscriptions/${subscription_id}/resourcegroups/${ingest_resource_group_name}/providers/microsoft.operationalinsights/workspaces/${dmp_log_analytics_workspace_name}",
+                    "SubscriptionId": "${subscription_id}"
+                  },
+                  "isOptional": true
+                },
+                {
+                  "name": "Dimensions",
+                  "value": {
+                    "aggregation": "Sum",
+                    "splitBy": [],
+                    "xAxis": {
+                      "name": "Caller_s",
+                      "type": "string"
+                    },
+                    "yAxis": [
+                      {
+                        "name": "count_",
+                        "type": "long"
+                      }
+                    ]
+                  },
+                  "isOptional": true
+                },
+                {
+                  "name": "Query",
+                  "value": "// Management operations in the last 7 days \r\n// This lists all the management calls for the last 7 days. \r\nAzureDiagnostics\r\n| where TimeGenerated > ago(7d)\r\n| where ResourceProvider ==\"MICROSOFT.SERVICEBUS\"\r\n| where Category == \"OperationalLogs\"\r\n| summarize count() by Caller_s, _ResourceId\n",
+                  "isOptional": true
+                },
+                {
+                  "name": "PartTitle",
+                  "value": "Analytics",
+                  "isOptional": true
+                },
+                {
+                  "name": "PartSubTitle",
+                  "value": "${dmp_log_analytics_workspace_name}",
+                  "isOptional": true
+                },
+                {
+                  "name": "PartId",
+                  "value": "117c3f3e-10af-4003-9604-23d4d42b8e95",
+                  "isOptional": true
+                },
+                {
+                  "name": "Version",
+                  "value": "1.0",
+                  "isOptional": true
+                },
+                {
+                  "name": "resourceTypeMode",
+                  "value": "workspace",
+                  "isOptional": true
+                },
+                {
+                  "name": "TimeRange",
+                  "isOptional": true
+                },
+                {
+                  "name": "DashboardId",
+                  "isOptional": true
+                },
+                {
+                  "name": "ControlType",
+                  "value": "FrameControlChart",
+                  "isOptional": true
+                },
+                {
+                  "name": "SpecificChart",
+                  "value": "Donut",
+                  "isOptional": true
+                }
+              ],
+              "type": "Extension/Microsoft_OperationsManagementSuite_Workspace/PartType/LogsDashboardPart",
+              "settings": {
+                "content": {
+                  "PartSubTitle": "${dmp_log_analytics_workspace_name}",
+                  "PartTitle": "Statistics by  Caller_s"
+                }
+              }
+            }
+          },
+          "39": {
+            "position": {
+              "x": 17,
+              "y": 16,
+              "colSpan": 5,
+              "rowSpan": 4
+            },
+            "metadata": {
+              "inputs": [
+                {
+                  "name": "ComponentId",
+                  "value": {
+                    "SubscriptionId": "${subscription_id}",
+                    "ResourceGroup": "${ingest_resource_group_name}",
+                    "Name": "${dmp_runway_servicebus_name}",
+                    "ResourceId": "/subscriptions/${subscription_id}/resourceGroups/${ingest_resource_group_name}/providers/Microsoft.ServiceBus/namespaces/${dmp_runway_servicebus_name}"
+                  },
+                  "isOptional": true
+                },
+                {
+                  "name": "Dimensions",
+                  "isOptional": true
+                },
+                {
+                  "name": "Query",
+                  "value": "//Last 100 executions of Service bus\nAzureDiagnostics\n| project TimeGenerated, Category, Caller_s, Status_s\n|order by TimeGenerated desc\n|limit 100\n",
+                  "isOptional": true
+                },
+                {
+                  "name": "PartTitle",
+                  "value": "Analytics",
+                  "isOptional": true
+                },
+                {
+                  "name": "PartSubTitle",
+                  "value": "${dmp_runway_servicebus_name}",
+                  "isOptional": true
+                },
+                {
+                  "name": "PartId",
+                  "value": "57928783-5b5f-46d3-929f-2e2cc239b878",
+                  "isOptional": true
+                },
+                {
+                  "name": "Version",
+                  "value": "1.0",
+                  "isOptional": true
+                },
+                {
+                  "name": "resourceTypeMode",
+                  "value": "azureFirst",
+                  "isOptional": true
+                },
+                {
+                  "name": "TimeRange",
+                  "value": "P1D",
+                  "isOptional": true
+                },
+                {
+                  "name": "DashboardId",
+                  "isOptional": true
+                },
+                {
+                  "name": "ControlType",
+                  "value": "AnalyticsGrid",
+                  "isOptional": true
+                },
+                {
+                  "name": "SpecificChart",
+                  "isOptional": true
+                }
+              ],
+              "type": "Extension/Microsoft_OperationsManagementSuite_Workspace/PartType/LogsDashboardPart",
+              "settings": {
+                "content": {
+                  "PartTitle": "Top 100 Executions",
+                  "PartSubTitle": "${dmp_runway_servicebus_name}",
+                  "GridColumnsWidth": {
+                    "TimeGenerated": "484px"
+                  }
+                }
+              }
+            }
+          },
+          "40": {
+            "position": {
+              "x": 22,
+              "y": 16,
+              "colSpan": 5,
+              "rowSpan": 4
+            },
+            "metadata": {
+              "inputs": [
+                {
+                  "name": "ComponentId",
+                  "value": {
+                    "SubscriptionId": "${subscription_id}",
+                    "ResourceGroup": "${ingest_resource_group_name}",
+                    "Name": "${dmp_runway_servicebus_name}",
+                    "ResourceId": "/subscriptions/${subscription_id}/resourceGroups/${ingest_resource_group_name}/providers/Microsoft.ServiceBus/namespaces/${dmp_runway_servicebus_name}"
+                  },
+                  "isOptional": true
+                },
+                {
+                  "name": "Dimensions",
+                  "isOptional": true
+                },
+                {
+                  "name": "Query",
+                  "value": "AzureDiagnostics \r\n| where Status_s == 'Failed'\r\n| extend error_info = parse_json(EventProperties_s)\r\n| project TimeGenerated, Caller_s, error_info.ErrorCode, error_info.ErrorMessage\r\n",
+                  "isOptional": true
+                },
+                {
+                  "name": "PartTitle",
+                  "value": "Analytics",
+                  "isOptional": true
+                },
+                {
+                  "name": "PartSubTitle",
+                  "value": "${dmp_runway_servicebus_name}",
+                  "isOptional": true
+                },
+                {
+                  "name": "PartId",
+                  "value": "88a6fc7a-cd7c-49c3-910b-c2516c20d998",
+                  "isOptional": true
+                },
+                {
+                  "name": "Version",
+                  "value": "1.0",
+                  "isOptional": true
+                },
+                {
+                  "name": "resourceTypeMode",
+                  "value": "azureFirst",
+                  "isOptional": true
+                },
+                {
+                  "name": "TimeRange",
+                  "value": "P1D",
+                  "isOptional": true
+                },
+                {
+                  "name": "DashboardId",
+                  "isOptional": true
+                },
+                {
+                  "name": "ControlType",
+                  "value": "AnalyticsGrid",
+                  "isOptional": true
+                },
+                {
+                  "name": "SpecificChart",
+                  "isOptional": true
+                }
+              ],
+              "type": "Extension/Microsoft_OperationsManagementSuite_Workspace/PartType/LogsDashboardPart",
+              "settings": {
+                "content": {
+                  "PartTitle": "Error_Info",
+                  "PartSubTitle": "${dmp_runway_servicebus_name}"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "metadata": {
+      "model": {
+        "timeRange": {
+          "value": {
+            "relative": {
+              "duration": 24,
+              "timeUnit": 1
+            }
+          },
+          "type": "MsPortalFx.Composition.Configuration.ValueTypes.TimeRange"
+        },
+        "filterLocale": {
+          "value": "en-us"
+        },
+        "filters": {
+          "value": {
+            "MsPortalFx_TimeRange": {
+              "model": {
+                "format": "utc",
+                "granularity": "auto",
+                "relative": "24h"
+              },
+              "displayCache": {
+                "name": "UTC Time",
+                "value": "Past 24 hours"
+              },
+              "filteredPartIds": [
+                "StartboardPart-LogsDashboardPart-42270ce8-eb96-47b6-aa33-294af6ca5009",
+                "StartboardPart-LogsDashboardPart-42270ce8-eb96-47b6-aa33-294af6ca500b",
+                "StartboardPart-LogsDashboardPart-42270ce8-eb96-47b6-aa33-294af6ca500d",
+                "StartboardPart-LogsDashboardPart-42270ce8-eb96-47b6-aa33-294af6ca500f",
+                "StartboardPart-LogsDashboardPart-42270ce8-eb96-47b6-aa33-294af6ca5011",
+                "StartboardPart-LogsDashboardPart-42270ce8-eb96-47b6-aa33-294af6ca5013",
+                "StartboardPart-LogsDashboardPart-42270ce8-eb96-47b6-aa33-294af6ca5017",
+                "StartboardPart-LogsDashboardPart-42270ce8-eb96-47b6-aa33-294af6ca5019",
+                "StartboardPart-LogsDashboardPart-42270ce8-eb96-47b6-aa33-294af6ca501b",
+                "StartboardPart-LogsDashboardPart-42270ce8-eb96-47b6-aa33-294af6ca501d",
+                "StartboardPart-LogsDashboardPart-42270ce8-eb96-47b6-aa33-294af6ca501f",
+                "StartboardPart-LogsDashboardPart-42270ce8-eb96-47b6-aa33-294af6ca5021",
+                "StartboardPart-LogsDashboardPart-42270ce8-eb96-47b6-aa33-294af6ca5023",
+                "StartboardPart-LogsDashboardPart-42270ce8-eb96-47b6-aa33-294af6ca5027",
+                "StartboardPart-LogsDashboardPart-42270ce8-eb96-47b6-aa33-294af6ca5029",
+                "StartboardPart-LogsDashboardPart-42270ce8-eb96-47b6-aa33-294af6ca502b",
+                "StartboardPart-LogsDashboardPart-42270ce8-eb96-47b6-aa33-294af6ca502d",
+                "StartboardPart-LogsDashboardPart-42270ce8-eb96-47b6-aa33-294af6ca502f",
+                "StartboardPart-LogsDashboardPart-42270ce8-eb96-47b6-aa33-294af6ca5031",
+                "StartboardPart-LogsDashboardPart-42270ce8-eb96-47b6-aa33-294af6ca5033",
+                "StartboardPart-LogsDashboardPart-42270ce8-eb96-47b6-aa33-294af6ca5037",
+                "StartboardPart-LogsDashboardPart-42270ce8-eb96-47b6-aa33-294af6ca5039",
+                "StartboardPart-LogsDashboardPart-42270ce8-eb96-47b6-aa33-294af6ca503b",
+                "StartboardPart-LogsDashboardPart-42270ce8-eb96-47b6-aa33-294af6ca503d",
+                "StartboardPart-LogsDashboardPart-42270ce8-eb96-47b6-aa33-294af6ca503f",
+                "StartboardPart-LogsDashboardPart-42270ce8-eb96-47b6-aa33-294af6ca5041",
+                "StartboardPart-LogsDashboardPart-42270ce8-eb96-47b6-aa33-294af6ca5043",
+                "StartboardPart-LogsDashboardPart-42270ce8-eb96-47b6-aa33-294af6ca5045",
+                "StartboardPart-LogsDashboardPart-42270ce8-eb96-47b6-aa33-294af6ca5049",
+                "StartboardPart-LogsDashboardPart-42270ce8-eb96-47b6-aa33-294af6ca504b",
+                "StartboardPart-LogsDashboardPart-42270ce8-eb96-47b6-aa33-294af6ca504d",
+                "StartboardPart-LogsDashboardPart-42270ce8-eb96-47b6-aa33-294af6ca504f",
+                "StartboardPart-LogsDashboardPart-42270ce8-eb96-47b6-aa33-294af6ca5051",
+                "StartboardPart-LogsDashboardPart-42270ce8-eb96-47b6-aa33-294af6ca5053",
+                "StartboardPart-LogsDashboardPart-42270ce8-eb96-47b6-aa33-294af6ca5055",
+                "StartboardPart-LogsDashboardPart-42270ce8-eb96-47b6-aa33-294af6ca5057"
+              ]
+            }
+          }
+        }
+      }
+    }
+}

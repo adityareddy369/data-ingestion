@@ -1,0 +1,23 @@
+---
+- name: Configure ADF Integration Runtime base image
+  hosts: default
+
+  tasks:
+    - name: Create temporary build directory
+      win_tempfile:
+        state: directory
+        suffix: build
+      register: temp_dir
+
+    - name: Download Runtime MSI file
+      win_get_url:
+        url: https://artifactory.kroger.com/artifactory/data-management-platform/adf/v5.3.7720/IntegrationRuntime.msi
+        dest: '{{ temp_dir.path }}\IntegrationRuntime.msi'
+
+    - name: Install Runtime
+      become: yes
+      become_method: runas
+      become_user: System
+      win_package:
+        path: '{{ temp_dir.path }}\IntegrationRuntime.msi'
+  

@@ -1,0 +1,1284 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "dmp_adf_runway_id": {
+            "type": "String"
+        },
+        "dmp_storage_datalake_id": {
+            "type": "String"
+        },
+        "dmp_eventhub_id": {
+            "type": "String"
+        },
+        "dmp_functionapp_id": {
+            "type": "String"
+        },
+        "dmp_keyvault_id": {
+            "type": "String"
+        },
+        "dmp_servicebus_id": {
+            "type": "String"
+        },
+        "dmp_sql_db_metastore_id": {
+            "type": "String"
+        },
+        "dmp_sql_db_runway_id": {
+            "type": "String"
+        },
+		"dmp_sql_server_runway_id": {
+            "type": "String"
+        },
+        "dmp_databricks_id": {
+            "type": "String"
+        },
+        "dmp_adf_runway_name": {
+            "type": "String"
+        },
+        "dmp_storage_datalake_name": {
+            "type": "String"
+        },
+        "dmp_eventhub_name": {
+            "type": "String"
+        },
+		"dmp_eventhub_instance_name": {
+            "type": "String"
+        },
+        "dmp_functionapp_name": {
+            "type": "String"
+        },
+        "dmp_keyvault_name": {
+            "type": "String"
+        },
+        "dmp_servicebus_name": {
+            "type": "String"
+        },
+        "dmp_sql_db_metastore_name": {
+            "type": "String"
+        },
+        "dmp_sql_db_runway_name": {
+            "type": "String"
+        },
+        "dmp_databricks_name": {
+            "type": "String"
+        },
+        "dmp_resource_group_name": {
+            "type": "String"
+        },
+        "dmp_subscription_id": {
+            "type": "String"
+        },
+		"dmp_location": {
+            "type": "String"
+        },
+        "recurrence_interval_minutes": {
+            "type": "String"
+        },
+        "dmp_keyvault_url": {
+            "type": "String"
+        },
+        "dmp_webhook_url": {
+            "type": "String"
+        },
+        "retry_count": {
+            "type": "String"
+        },
+        "retry_interval_minutes": {
+            "type": "String"
+        },
+        "custom_message": {
+            "type": "String"
+        },
+        "dmp_logicapp_name": {
+            "type": "String"
+        },
+	"bug_bypass_unused_parm": {
+            "type": "String"
+        }
+
+    },
+    "variables": {},
+    "resources": [{
+        "type": "Microsoft.Logic/workflows",
+        "apiVersion": "2017-07-01",
+        "name": "[parameters('dmp_logicapp_name')]",
+        "location": "[parameters('dmp_location')]",
+        "identity": {
+            "type": "SystemAssigned"
+        },
+
+        "properties": {
+            "state": "Enabled",
+            "definition": {
+                "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+                "contentVersion": "1.0.0.0",
+                "parameters": {
+                    "la_adf_runway_id": {
+                        "type": "String"
+                    },
+                    "la_adf_runway_name": {
+                        "type": "String"
+                    },
+                    "la_custom_message": {
+                        "type": "String"
+                    },
+                    "la_databricks_id": {
+                        "type": "String"
+                    },
+                    "la_databricks_name": {
+                        "type": "String"
+                    },
+                    "la_eventhub_id": {
+                        "type": "String"
+                    },
+                    "la_eventhub_name": {
+                        "type": "String"
+                    },
+					"la_eventhub_instance_name": {
+                        "type": "String"
+                    },
+                    "la_functionapp_id": {
+                        "type": "String"
+                    },
+                    "la_functionapp_name": {
+                        "type": "String"
+                    },
+                    "la_keyvault_id": {
+                        "type": "String"
+                    },
+                    "la_keyvault_name": {
+                        "type": "String"
+                    },
+                    "la_keyvault_url": {
+                        "type": "String"
+                    },
+                    "la_recurrence_interval_minutes": {
+                        "type": "String"
+                    },
+                    "la_resource_group_name": {
+                        "type": "String"
+                    },
+                    "la_retry_count": {
+                        "type": "String"
+                    },
+                    "la_retry_interval_minutes": {
+                        "type": "String"
+                    },
+                    "la_servicebus_id": {
+                        "type": "String"
+                    },
+                    "la_servicebus_name": {
+                        "type": "String"
+                    },
+                    "la_sql_db_metastore_id": {
+                        "type": "String"
+                    },
+                    "la_sql_db_metastore_name": {
+                        "type": "String"
+                    },
+                    "la_sql_db_runway_id": {
+                        "type": "String"
+                    },
+					"la_sql_server_runway_id": {
+                        "type": "String"
+                    },
+                    "la_sql_db_runway_name": {
+                        "type": "String"
+                    },
+                    "la_storage_datalake_id": {
+                        "type": "String"
+                    },
+                    "la_storage_datalake_name": {
+                        "type": "String"
+                    },
+                    "la_subscription_id": {
+                        "type": "String"
+                    },
+                    "la_webhook_url": {
+                        "type": "String"
+                    }
+                },
+                "triggers": {
+                    "Recurrence": {
+                        "recurrence": {
+                            "frequency": "Minute",
+                            "interval": "@int(parameters('la_recurrence_interval_minutes'))"
+                        },
+                        "type": "Recurrence"
+                    }
+                },
+                "actions": {
+                    "Evaluate_final_status_": {
+                        "actions": {
+                            "Compose": {
+                                "runAfter": {
+                                    "send_mail_with_filter_body_attachment": [
+                                        "Succeeded"
+                                    ]
+                                },
+                                "type": "Compose",
+                                "inputs": "@json(string(outputs('send_mail_with_filter_body_attachment')))"
+                            },
+                            "HTTP": {
+                                "runAfter": {
+                                    "Compose": [
+                                        "TimedOut",
+                                        "Skipped",
+                                        "Failed",
+                                        "Succeeded"
+                                    ]
+                                },
+                                "type": "Http",
+                                "inputs": {
+                                    "body": "@outputs('Compose')",
+                                    "method": "POST",
+                                    "uri": "@parameters('la_webhook_url')"
+                                }
+                            },
+                            "send_mail_with_filter_body_attachment": {
+                                "runAfter": {},
+                                "type": "Compose",
+                                "inputs": {
+                                    "healthchecks": [{
+                                            "body": "@body('datalake_adls')",
+                                            "service": "@parameters('la_storage_datalake_name')",
+                                            "status": "@outputs('datalake_adls')['statusCode']"
+                                        },
+                                        {
+                                            "body": "@body('eventhub')",
+                                            "service": "@parameters('la_eventhub_name')",
+                                            "status": "@outputs('eventhub')['statusCode']"
+                                        },
+                                        {
+                                            "body": "@body('functionapp')",
+                                            "service": "@parameters('la_functionapp_name')",
+                                            "status": "@outputs('functionapp')['statusCode']"
+                                        },
+                                        {
+                                            "body": "@body('keyvault')",
+                                            "service": "@parameters('la_keyvault_name')",
+                                            "status": "@outputs('keyvault')['statusCode']"
+                                        },
+                                        {
+                                            "body": "@body('servicebus')",
+                                            "service": "@parameters('la_servicebus_name')",
+                                            "status": "@outputs('servicebus')['statusCode']"
+                                        },
+                                        {
+                                            "body": "@body('sql_db_metastore')",
+                                            "service": "@parameters('la_sql_db_metastore_name')",
+                                            "status": "@outputs('sql_db_metastore')['statusCode']"
+                                        },
+                                        {
+                                            "body": "@body('sql_db_runway')",
+                                            "service": "@parameters('la_sql_db_runway_name')",
+                                            "status": "@outputs('sql_db_runway')['statusCode']"
+                                        },
+                                        {
+                                            "body": "@body('adf')",
+                                            "service": "@parameters('la_adf_runway_name')",
+                                            "status": "@outputs('adf')['statusCode']"
+                                        },
+                                        {
+                                            "body": "@body('databricks')",
+                                            "service": "@parameters('la_databricks_name')",
+                                            "status": "@outputs('databricks')['statusCode']"
+                                        },
+                                        {
+                                            "body": "@if(equals(outputs('DataLake_container_list')['statusCode'],200),parameters('la_custom_message'),body('DataLake_container_list'))",
+                                            "service": "@concat(parameters('la_storage_datalake_name'),'_GET')",
+                                            "status": "@outputs('DataLake_container_list')['statusCode']"
+                                        },
+                                        {
+                                            "body": "@if(equals(outputs('Eventhub_consumergrp_list')['statusCode'],200),parameters('la_custom_message'),body('Eventhub_consumergrp_list'))",
+                                            "service": "@concat(parameters('la_eventhub_name'),'_GET')",
+                                            "status": "@outputs('Eventhub_consumergrp_list')['statusCode']"
+                                        },
+                                        {
+                                            "body": "@if(equals(outputs('function_list_generate')['statusCode'],200),parameters('la_custom_message'),body('function_list_generate'))",
+                                            "service": "@concat(parameters('la_functionapp_name'),'_GET')",
+                                            "status": "@outputs('function_list_generate')['statusCode']"
+                                        },
+                                        {
+                                            "body": "@if(equals(outputs('KeyVault_Keys_list')['statusCode'],200),parameters('la_custom_message'),body('KeyVault_Keys_list'))",
+                                            "service": "@concat(parameters('la_keyvault_name'),'_GET')",
+                                            "status": "@outputs('KeyVault_Keys_list')['statusCode']"
+                                        },
+                                        {
+                                            "body": "@if(equals(outputs('ServiceBus_Queue_list')['statusCode'],200),parameters('la_custom_message'),body('ServiceBus_Queue_list'))",
+                                            "service": "@concat(parameters('la_servicebus_name'),'_GET')",
+                                            "status": "@outputs('ServiceBus_Queue_list')['statusCode']"
+                                        },
+                                        {
+                                            "body": "@if(equals(outputs('SQL_metastore_details')['statusCode'],200),parameters('la_custom_message'),body('SQL_metastore_details'))",
+                                            "service": "@concat(parameters('la_sql_db_metastore_name'),'_GET')",
+                                            "status": "@outputs('SQL_metastore_details')['statusCode']"
+                                        },
+                                        {
+                                            "body": "@if(equals(outputs('SQL_DB_Read')['statusCode'],200),parameters('la_custom_message'),body('SQL_DB_Read'))",
+                                            "service": "@concat(parameters('la_sql_db_runway_name'),'_GET')",
+                                            "status": "@outputs('SQL_DB_Read')['statusCode']"
+                                        },
+                                        {
+                                            "body": "@if(equals(outputs('DataFactory_pipeline_list')['statusCode'],200),parameters('la_custom_message'),body('DataFactory_pipeline_list'))",
+                                            "service": "@concat(parameters('la_adf_runway_name'),'_GET')",
+                                            "status": "@outputs('DataFactory_pipeline_list')['statusCode']"
+                                        },
+                                        {
+                                            "body": "@if(equals(outputs('Databricks_cluster_list')['statusCode'],200),parameters('la_custom_message'),body('Databricks_cluster_list'))",
+                                            "service": "@concat(parameters('la_databricks_name'),'_GET')",
+                                            "status": "@outputs('Databricks_cluster_list')['statusCode']"
+                                        }
+                                    ],
+                                    "host": "dmp-service-health-check",
+                                    "index": "2b575356-7553-11eb-9439-0242ac130002"
+                                }
+                            }
+                        },
+                        "runAfter": {
+                            "Until_scope2": [
+                                "Succeeded",
+                                "Failed",
+                                "Skipped",
+                                "TimedOut"
+                            ]
+                        },
+                        "else": {
+                            "actions": {
+                                "Terminate": {
+                                    "runAfter": {},
+                                    "type": "Terminate",
+                                    "inputs": {
+                                        "runStatus": "Succeeded"
+                                    }
+                                }
+                            }
+                        },
+                        "expression": {
+                            "or": [{
+                                    "not": {
+                                        "equals": [
+                                            "@variables('status')",
+                                            true
+                                        ]
+                                    }
+                                },
+                                {
+                                    "not": {
+                                        "equals": [
+                                            "@variables('Resource_read_status')",
+                                            true
+                                        ]
+                                    }
+                                }
+                            ]
+                        },
+                        "type": "If"
+                    },
+                    "Initialize_retry_counter_for_scope_1": {
+                        "runAfter": {},
+                        "type": "InitializeVariable",
+                        "inputs": {
+                            "variables": [{
+                                "name": "counter",
+                                "type": "integer",
+                                "value": 0
+                            }]
+                        }
+                    },
+                    "Initialize_retry_counter_for_scope_2": {
+                        "runAfter": {
+                            "Initialize_status_capture_of_resources_for_scope_1": [
+                                "Succeeded"
+                            ]
+                        },
+                        "type": "InitializeVariable",
+                        "inputs": {
+                            "variables": [{
+                                "name": "Resource_read_counter",
+                                "type": "integer",
+                                "value": 0
+                            }]
+                        }
+                    },
+                    "Initialize_status_capture_of_resources_for_scope_1": {
+                        "runAfter": {
+                            "Initialize_retry_counter_for_scope_1": [
+                                "Succeeded"
+                            ]
+                        },
+                        "type": "InitializeVariable",
+                        "inputs": {
+                            "variables": [{
+                                "name": "status",
+                                "type": "boolean",
+                                "value": false
+                            }]
+                        }
+                    },
+                    "Initialize_status_capture_of_resources_for_scope_2": {
+                        "runAfter": {
+                            "Initialize_retry_counter_for_scope_2": [
+                                "Succeeded"
+                            ]
+                        },
+                        "type": "InitializeVariable",
+                        "inputs": {
+                            "variables": [{
+                                "name": "Resource_read_status",
+                                "type": "boolean",
+                                "value": false
+                            }]
+                        }
+                    },
+                    "Until_scope1": {
+                        "actions": {
+                            "Scope_1_:_check_health_of_resource": {
+                                "actions": {
+                                    "Condition": {
+                                        "actions": {
+                                            "Delay": {
+                                                "runAfter": {
+                                                    "Increment_variable": [
+                                                        "Succeeded"
+                                                    ]
+                                                },
+                                                "type": "Wait",
+                                                "inputs": {
+                                                    "interval": {
+                                                        "count": "@int(parameters('la_retry_interval_minutes'))",
+                                                        "unit": "Minute"
+                                                    }
+                                                }
+                                            },
+                                            "Increment_variable": {
+                                                "runAfter": {},
+                                                "type": "IncrementVariable",
+                                                "inputs": {
+                                                    "name": "counter",
+                                                    "value": 1
+                                                }
+                                            }
+                                        },
+                                        "runAfter": {
+                                            "adf": [
+                                                "Succeeded",
+                                                "Failed",
+                                                "Skipped",
+                                                "TimedOut"
+                                            ],
+                                            "databricks": [
+                                                "Succeeded",
+                                                "Failed",
+                                                "Skipped",
+                                                "TimedOut"
+                                            ],
+                                            "datalake_adls": [
+                                                "Succeeded",
+                                                "Failed",
+                                                "Skipped",
+                                                "TimedOut"
+                                            ],
+                                            "eventhub": [
+                                                "TimedOut",
+                                                "Skipped",
+                                                "Failed",
+                                                "Succeeded"
+                                            ],
+                                            "functionapp": [
+                                                "Succeeded",
+                                                "Failed",
+                                                "Skipped",
+                                                "TimedOut"
+                                            ],
+                                            "servicebus": [
+                                                "Succeeded",
+                                                "Failed",
+                                                "TimedOut",
+                                                "Skipped"
+                                            ],
+                                            "sql_db_metastore": [
+                                                "Succeeded",
+                                                "Failed",
+                                                "Skipped",
+                                                "TimedOut"
+                                            ],
+                                            "sql_db_runway": [
+                                                "TimedOut",
+                                                "Skipped",
+                                                "Failed",
+                                                "Succeeded"
+                                            ]
+                                        },
+                                        "else": {
+                                            "actions": {
+                                                "update_counter": {
+                                                    "runAfter": {},
+                                                    "type": "SetVariable",
+                                                    "inputs": {
+                                                        "name": "counter",
+                                                        "value": "@int(parameters('la_retry_count'))"
+                                                    }
+                                                },
+                                                "update_status": {
+                                                    "runAfter": {
+                                                        "update_counter": [
+                                                            "Succeeded"
+                                                        ]
+                                                    },
+                                                    "type": "SetVariable",
+                                                    "inputs": {
+                                                        "name": "status",
+                                                        "value": true
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "expression": {
+                                            "or": [{
+                                                    "not": {
+                                                        "equals": [
+                                                            "@outputs('datalake_adls')['statusCode']",
+                                                            200
+                                                        ]
+                                                    }
+                                                },
+                                                {
+                                                    "not": {
+                                                        "equals": [
+                                                            "@outputs('eventhub')['statusCode']",
+                                                            200
+                                                        ]
+                                                    }
+                                                },
+                                                {
+                                                    "not": {
+                                                        "equals": [
+                                                            "@outputs('functionapp')['statusCode']",
+                                                            200
+                                                        ]
+                                                    }
+                                                },
+                                                {
+                                                    "not": {
+                                                        "equals": [
+                                                            "@outputs('keyvault')['statusCode']",
+                                                            200
+                                                        ]
+                                                    }
+                                                },
+                                                {
+                                                    "not": {
+                                                        "equals": [
+                                                            "@outputs('servicebus')['statusCode']",
+                                                            200
+                                                        ]
+                                                    }
+                                                },
+                                                {
+                                                    "not": {
+                                                        "equals": [
+                                                            "@outputs('sql_db_metastore')['statusCode']",
+                                                            200
+                                                        ]
+                                                    }
+                                                },
+                                                {
+                                                    "not": {
+                                                        "equals": [
+                                                            "@outputs('sql_db_runway')['statusCode']",
+                                                            200
+                                                        ]
+                                                    }
+                                                },
+                                                {
+                                                    "not": {
+                                                        "equals": [
+                                                            "@outputs('databricks')['statusCode']",
+                                                            200
+                                                        ]
+                                                    }
+                                                },
+                                                {
+                                                    "not": {
+                                                        "equals": [
+                                                            "@outputs('adf')['statusCode']",
+                                                            200
+                                                        ]
+                                                    }
+                                                }
+                                            ]
+                                        },
+                                        "type": "If"
+                                    },
+                                    "adf": {
+                                        "runAfter": {
+                                            "parallelize_connector": [
+                                                "Succeeded"
+                                            ]
+                                        },
+                                        "type": "Http",
+                                        "inputs": {
+                                            "authentication": {
+                                                "type": "ManagedServiceIdentity"
+                                            },
+                                            "method": "GET",
+                                            "uri": "@{concat('https://management.azure.com',parameters('la_adf_runway_id'),'/providers/Microsoft.ResourceHealth/availabilityStatuses/current?api-version=2018-07-01')}"
+                                        }
+                                    },
+                                    "databricks": {
+                                        "runAfter": {
+                                            "get_dbx_token": [
+                                                "Succeeded",
+                                                "TimedOut",
+                                                "Skipped",
+                                                "Failed"
+                                            ]
+                                        },
+                                        "type": "Http",
+                                        "inputs": {
+                                            "headers": {
+                                                "Authorization": "@{concat('Bearer ',body('get_dbx_token')?['value'])}",
+                                                "Content-Type": "application/json"
+                                            },
+                                            "method": "GET",
+                                            "uri": "@{concat(parameters('la_databricks_id'),'/api/2.0/workspace/get-status?path=/')}"
+                                        }
+                                    },
+                                    "datalake_adls": {
+                                        "runAfter": {
+                                            "parallelize_connector": [
+                                                "Succeeded"
+                                            ]
+                                        },
+                                        "type": "Http",
+                                        "inputs": {
+                                            "authentication": {
+                                                "type": "ManagedServiceIdentity"
+                                            },
+                                            "method": "GET",
+                                            "uri": "@{concat('https://management.azure.com',parameters('la_storage_datalake_id'),'/providers/Microsoft.ResourceHealth/availabilityStatuses/current?api-version=2018-07-01')}"
+                                        }
+                                    },
+                                    "eventhub": {
+                                        "runAfter": {
+                                            "parallelize_connector": [
+                                                "Succeeded"
+                                            ]
+                                        },
+                                        "type": "Http",
+                                        "inputs": {
+                                            "authentication": {
+                                                "type": "ManagedServiceIdentity"
+                                            },
+                                            "method": "GET",
+                                            "uri": "@{concat('https://management.azure.com',parameters('la_eventhub_id'),'/providers/Microsoft.ResourceHealth/availabilityStatuses/current?api-version=2018-07-01')}"
+                                        }
+                                    },
+                                    "functionapp": {
+                                        "runAfter": {
+                                            "parallelize_connector": [
+                                                "Succeeded"
+                                            ]
+                                        },
+                                        "type": "Http",
+                                        "inputs": {
+                                            "authentication": {
+                                                "type": "ManagedServiceIdentity"
+                                            },
+                                            "method": "GET",
+                                            "uri": "@{concat('https://management.azure.com',parameters('la_functionapp_id'),'/providers/Microsoft.ResourceHealth/availabilityStatuses/current?api-version=2018-07-01')}"
+                                        }
+                                    },
+                                    "get_dbx_token": {
+                                        "runAfter": {
+                                            "keyvault": [
+                                                "Succeeded",
+                                                "Failed",
+                                                "Skipped",
+                                                "TimedOut"
+                                            ]
+                                        },
+                                        "type": "Http",
+                                        "inputs": {
+                                            "authentication": {
+                                                "audience": "https://vault.azure.net",
+                                                "type": "ManagedServiceIdentity"
+                                            },
+                                            "method": "GET",
+                                            "uri": "@{concat('https://',parameters('la_keyvault_name'),'.vault.azure.net/secrets/AZURE-DATABRICKS-PAT?api-version=7.1')}"
+                                        },
+                                        "runtimeConfiguration": {
+                                            "secureData": {
+                                                "properties": [
+                                                    "outputs"
+                                                ]
+                                            }
+                                        }
+                                    },
+                                    "keyvault": {
+                                        "runAfter": {
+                                            "parallelize_connector": [
+                                                "Succeeded"
+                                            ]
+                                        },
+                                        "type": "Http",
+                                        "inputs": {
+                                            "authentication": {
+                                                "audience": "https://management.azure.com",
+                                                "type": "ManagedServiceIdentity"
+                                            },
+                                            "method": "GET",
+                                            "uri": "@{concat('https://management.azure.com',parameters('la_keyvault_id'),'/providers/Microsoft.ResourceHealth/availabilityStatuses/current?api-version=2018-07-01')}"
+                                        }
+                                    },
+                                    "parallelize_connector": {
+                                        "runAfter": {},
+                                        "type": "Compose",
+                                        "inputs": {
+                                            "count": "@variables('counter')"
+                                        }
+                                    },
+                                    "servicebus": {
+                                        "runAfter": {
+                                            "parallelize_connector": [
+                                                "Succeeded"
+                                            ]
+                                        },
+                                        "type": "Http",
+                                        "inputs": {
+                                            "authentication": {
+                                                "type": "ManagedServiceIdentity"
+                                            },
+                                            "method": "GET",
+                                            "uri": "@{concat('https://management.azure.com',parameters('la_servicebus_id'),'/providers/Microsoft.ResourceHealth/availabilityStatuses/current?api-version=2018-07-01')}"
+                                        }
+                                    },
+                                    "sql_db_metastore": {
+                                        "runAfter": {
+                                            "parallelize_connector": [
+                                                "Succeeded"
+                                            ]
+                                        },
+                                        "type": "Http",
+                                        "inputs": {
+                                            "authentication": {
+                                                "type": "ManagedServiceIdentity"
+                                            },
+                                            "method": "GET",
+                                            "uri": "@{concat('https://management.azure.com',parameters('la_sql_db_metastore_id'),'/providers/Microsoft.ResourceHealth/availabilityStatuses/current?api-version=2018-07-01')}"
+                                        }
+                                    },
+                                    "sql_db_runway": {
+                                        "runAfter": {
+                                            "parallelize_connector": [
+                                                "Succeeded"
+                                            ]
+                                        },
+                                        "type": "Http",
+                                        "inputs": {
+                                            "authentication": {
+                                                "type": "ManagedServiceIdentity"
+                                            },
+                                            "method": "GET",
+                                            "uri": "@{concat('https://management.azure.com',parameters('la_sql_db_runway_id'),'/providers/Microsoft.ResourceHealth/availabilityStatuses/current?api-version=2018-07-01')}"
+                                        }
+                                    }
+                                },
+                                "runAfter": {},
+                                "type": "Scope"
+                            }
+                        },
+                        "runAfter": {
+                            "Initialize_status_capture_of_resources_for_scope_2": [
+                                "Succeeded",
+                                "Failed",
+                                "Skipped",
+                                "TimedOut"
+                            ]
+                        },
+                        "expression": "@equals(variables('counter'), int(parameters('la_retry_count')))",
+                        "limit": {
+                            "count": 60,
+                            "timeout": "PT1H"
+                        },
+                        "type": "Until"
+                    },
+					"Until_scope2": {
+                        "actions": {
+                                "Scope_2_:_check_get_response_of_resource": {
+                                "actions": {
+                                    "DataFactory_pipeline_list": {
+                                        "runAfter": {
+                                            "Resource_read_parallel_branch": [
+                                                "Succeeded"
+                                            ]
+                                        },
+                                        "type": "Http",
+                                        "inputs": {
+                                            "authentication": {
+                                                "audience": "https://management.core.windows.net/",
+                                                "type": "ManagedServiceIdentity"
+                                            },
+                                            "method": "GET",                                  
+											"uri": "@{concat('https://management.azure.com',parameters('la_adf_runway_id'),'/pipelines?api-version=2018-06-01')}"
+										}
+                                    },
+                                    "DataLake_container_list": {
+                                        "runAfter": {
+                                            "Resource_read_parallel_branch": [
+                                                "Succeeded"
+                                            ]
+                                        },
+                                        "type": "Http",
+                                        "inputs": {
+                                            "authentication": {
+                                                "audience": "https://storage.azure.com/",
+                                                "type": "ManagedServiceIdentity"
+                                            },
+                                            "method": "GET",
+                                            "uri": "@{concat('https://',parameters('la_storage_datalake_name'),'.dfs.core.windows.net/?resource=account')}"
+                                        }
+                                    },
+                                    "Databricks_cluster_list": {
+                                        "runAfter": {
+                                            "Resource_read_parallel_branch": [
+                                                "Succeeded"
+                                            ]
+                                        },
+                                        "type": "Http",
+                                        "inputs": {
+                                            "headers": {
+                                                "Authorization": "@{concat('Bearer ',body('get_dbx_token')?['value'])}",
+                                                "Content-Type": "application/json"
+                                            },
+                                            "method": "GET",
+                                            "uri": "@{concat(parameters('la_databricks_id'),'/api/2.0/clusters/list')}"
+                                        }
+                                    },
+                                    "Eventhub_consumergrp_list": {
+                                        "runAfter": {
+                                            "Resource_read_parallel_branch": [
+                                                "Succeeded"
+                                            ]
+                                        },
+                                        "type": "Http",
+                                        "inputs": {
+                                            "authentication": {
+                                                "audience": "https://eventhubs.azure.net/",
+                                                "type": "ManagedServiceIdentity"
+                                            },
+                                            "method": "GET",
+                                            "uri": "@{concat('https://',parameters('la_eventhub_name'),'.servicebus.windows.net/',parameters('la_eventhub_instance_name'),'/consumergroups')}"
+                                        }
+                                    },
+                                    "KeyVault_Keys_list": {
+                                        "runAfter": {
+                                            "Resource_read_parallel_branch": [
+                                                "Succeeded"
+                                            ]
+                                        },
+                                        "type": "Http",
+                                        "inputs": {
+                                            "authentication": {
+                                                "audience": "https://vault.azure.net",
+                                                "type": "ManagedServiceIdentity"
+                                            },
+                                            "method": "GET",
+                                           "uri": "@{concat('https://',parameters('la_keyvault_name'),'.vault.azure.net/keys?api-version=7.1')}"
+                                        }
+                                    },
+                                    "Resource_read_conditions": {
+                                        "actions": {
+                                            "Delay_2": {
+                                                "runAfter": {
+                                                    "Resource_read_counter_increment": [
+                                                        "Succeeded"
+                                                    ]
+                                                },
+                                                "type": "Wait",
+                                                "inputs": {
+                                                    "interval": {
+                                                        "count": "@int(parameters('la_retry_interval_minutes'))",
+                                                        "unit": "Minute"
+                                                    }
+                                                }
+                                            },
+                                            "Resource_read_counter_increment": {
+                                                "runAfter": {},
+                                                "type": "IncrementVariable",
+                                                "inputs": {
+                                                    "name": "Resource_read_counter",
+                                                    "value": 1
+                                                }
+                                            }
+                                        },
+                                        "runAfter": {
+                                            "DataFactory_pipeline_list": [
+                                                "Succeeded",
+                                                "Failed",
+                                                "Skipped",
+                                                "TimedOut"
+                                            ],
+                                            "DataLake_container_list": [
+                                                "Succeeded",
+                                                "Failed",
+                                                "Skipped",
+                                                "TimedOut"
+                                            ],
+                                            "Databricks_cluster_list": [
+                                                "Succeeded",
+                                                "Failed",
+                                                "Skipped",
+                                                "TimedOut"
+                                            ],
+                                            "Eventhub_consumergrp_list": [
+                                                "Succeeded",
+                                                "Failed",
+                                                "Skipped",
+                                                "TimedOut"
+                                            ],
+                                            "KeyVault_Keys_list": [
+                                                "Succeeded",
+                                                "Failed",
+                                                "Skipped",
+                                                "TimedOut"
+                                            ],
+                                            "SQL_DB_List": [
+                                                "Succeeded",
+                                                "Failed",
+                                                "Skipped",
+                                                "TimedOut"
+                                            ],
+                                            "SQL_DB_Read": [
+                                                "Succeeded",
+                                                "Failed",
+                                                "Skipped",
+                                                "TimedOut"
+                                            ],
+                                            "SQL_metastore_details": [
+                                                "Succeeded",
+                                                "Failed",
+                                                "Skipped",
+                                                "TimedOut"
+                                            ],
+                                            "ServiceBus_Queue_list": [
+                                                "Succeeded",
+                                                "Failed",
+                                                "Skipped",
+                                                "TimedOut"
+                                            ],
+                                            "function_list_generate": [
+                                                "Succeeded",
+                                                "Failed",
+                                                "Skipped",
+                                                "TimedOut"
+                                            ]
+                                        },
+                                        "else": {
+                                            "actions": {
+                                                "Set_Resource_read_counter": {
+                                                    "runAfter": {
+                                                        "Set_Resource_read_status": [
+                                                            "Succeeded"
+                                                        ]
+                                                    },
+                                                    "type": "SetVariable",
+                                                    "inputs": {
+                                                        "name": "Resource_read_counter",
+                                                        "value": "@int(parameters('la_retry_count'))"
+                                                    }
+                                                },
+                                                "Set_Resource_read_status": {
+                                                    "runAfter": {},
+                                                    "type": "SetVariable",
+                                                    "inputs": {
+                                                        "name": "Resource_read_status",
+                                                        "value": true
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "expression": {
+                                            "or": [{
+                                                    "not": {
+                                                        "equals": [
+                                                            "@outputs('DataFactory_pipeline_list')['statusCode']",
+                                                            200
+                                                        ]
+                                                    }
+                                                },
+                                                {
+                                                    "not": {
+                                                        "equals": [
+                                                            "@outputs('DataLake_container_list')['statusCode']",
+                                                            200
+                                                        ]
+                                                    }
+                                                },
+                                                {
+                                                    "not": {
+                                                        "equals": [
+                                                            "@outputs('Eventhub_consumergrp_list')['statusCode']",
+                                                            200
+                                                        ]
+                                                    }
+                                                },
+                                                {
+                                                    "not": {
+                                                        "equals": [
+                                                            "@outputs('KeyVault_Keys_list')['statusCode']",
+                                                            200
+                                                        ]
+                                                    }
+                                                },
+                                                {
+                                                    "not": {
+                                                        "equals": [
+                                                            "@outputs('SQL_DB_Read')['statusCode']",
+                                                            200
+                                                        ]
+                                                    }
+                                                },
+                                                {
+                                                    "not": {
+                                                        "equals": [
+                                                            "@outputs('SQL_metastore_details')['statusCode']",
+                                                            200
+                                                        ]
+                                                    }
+                                                },
+                                                {
+                                                    "not": {
+                                                        "equals": [
+                                                            "@outputs('ServiceBus_Queue_list')['statusCode']",
+                                                            200
+                                                        ]
+                                                    }
+                                                },
+                                                {
+                                                    "not": {
+                                                        "equals": [
+                                                            "@outputs('function_list_generate')['statusCode']",
+                                                            200
+                                                        ]
+                                                    }
+                                                },
+                                                {
+                                                    "not": {
+                                                        "equals": [
+                                                            "@outputs('Databricks_cluster_list')['statusCode']",
+                                                            200
+                                                        ]
+                                                    }
+                                                }
+                                            ]
+                                        },
+                                        "type": "If"
+                                    },
+                                    "Resource_read_parallel_branch": {
+                                        "runAfter": {},
+                                        "type": "Compose",
+                                        "inputs": {
+                                            "count": "@variables('Resource_read_counter')"
+                                        }
+                                    },
+                                    "SQL_DB_List": {
+                                        "runAfter": {
+                                            "Resource_read_parallel_branch": [
+                                                "Succeeded"
+                                            ]
+                                        },
+                                        "type": "Http",
+                                        "inputs": {
+                                            "authentication": {
+                                                "audience": "https://management.core.windows.net/",
+                                                "type": "ManagedServiceIdentity"
+                                            },
+                                            "method": "GET",
+                                            "uri": "@{concat('https://management.azure.com/',parameters('la_sql_server_runway_id'),'/databases?api-version=2020-08-01-preview')}"
+                                        }
+                                    },
+                                    "SQL_DB_Read": {
+                                        "runAfter": {
+                                            "Resource_read_parallel_branch": [
+                                                "Succeeded"
+                                            ]
+                                        },
+                                        "type": "Http",
+                                        "inputs": {
+                                            "authentication": {
+                                                "audience": "https://management.core.windows.net/",
+                                                "type": "ManagedServiceIdentity"
+                                            },
+                                            "method": "GET",
+                                            "uri": "@{concat('https://management.azure.com/',parameters('la_sql_db_runway_id'),'?api-version=2019-06-01-preview')}"
+                                        }
+                                    },
+                                    "SQL_metastore_details": {
+                                        "runAfter": {
+                                            "Resource_read_parallel_branch": [
+                                                "Succeeded"
+                                            ]
+                                        },
+                                        "type": "Http",
+                                        "inputs": {
+                                            "authentication": {
+                                                "audience": "https://management.core.windows.net/",
+                                                "type": "ManagedServiceIdentity"
+                                            },
+                                            "method": "GET",
+                                            "uri": "@{concat('https://management.azure.com/',parameters('la_sql_db_metastore_id'),'?api-version=2019-06-01-preview')}"
+                                        }
+                                    },
+                                    "ServiceBus_Queue_list": {
+                                        "runAfter": {
+                                            "Resource_read_parallel_branch": [
+                                                "Succeeded"
+                                            ]
+                                        },
+                                        "type": "Http",
+                                        "inputs": {
+                                            "authentication": {
+                                                "audience": "https://management.core.windows.net/",
+                                                "type": "ManagedServiceIdentity"
+                                            },
+                                            "method": "GET",
+                                            "uri": "@{concat('https://management.azure.com/',parameters('la_servicebus_id'),'/queues?api-version=2017-04-01')}"
+                                        }
+                                    },
+                                    "function_list_generate": {
+                                        "runAfter": {
+                                            "Resource_read_parallel_branch": [
+                                                "Succeeded"
+                                            ]
+                                        },
+                                        "type": "Http",
+                                        "inputs": {
+                                            "authentication": {
+                                                "audience": "https://management.core.windows.net/",
+                                                "type": "ManagedServiceIdentity"
+                                            },
+                                            "method": "GET",
+                                            "uri": "@{concat('https://management.azure.com/',parameters('la_functionapp_id'),'/functions?api-version=2019-08-01')}"
+                                        }
+                                    }
+                                },
+                                "runAfter": {},
+                                "type": "Scope"
+                            }
+                        },
+                            "runAfter": {
+                                "Until_scope1": [
+                                    "Succeeded",
+                                    "Failed",
+                                    "Skipped",
+                                    "TimedOut"
+                                ]
+                            },
+                            "expression": "@equals(variables('Resource_read_counter'), int(parameters('la_retry_count')))",
+                            "limit": {
+                                "count": 60,
+                                "timeout": "PT1H"
+                            },
+                            "type": "Until"
+                        }
+                }
+                
+            },
+            "parameters": {
+                "la_adf_runway_id": {
+                    "value": "[parameters('dmp_adf_runway_id')]"
+                },
+                "la_adf_runway_name": {
+                    "value": "[parameters('dmp_adf_runway_name')]"
+                },
+                "la_custom_message": {
+                    "value": "[parameters('custom_message')]"
+                },
+                "la_databricks_id": {
+                    "value": "[parameters('dmp_databricks_id')]"
+                },
+                "la_databricks_name": {
+                    "value": "[parameters('dmp_databricks_name')]"
+                },
+                "la_eventhub_id": {
+                    "value": "[parameters('dmp_eventhub_id')]"
+                },
+                "la_eventhub_name": {
+                    "value": "[parameters('dmp_eventhub_name')]"
+                },
+				"la_eventhub_instance_name": {
+                    "value": "[parameters('dmp_eventhub_instance_name')]"
+                },
+                "la_functionapp_id": {
+                    "value": "[parameters('dmp_functionapp_id')]"
+                },
+                "la_functionapp_name": {
+                    "value": "[parameters('dmp_functionapp_name')]"
+                },
+                "la_keyvault_id": {
+                    "value": "[parameters('dmp_keyvault_id')]"
+                },
+                "la_keyvault_name": {
+                    "value": "[parameters('dmp_keyvault_name')]"
+                },
+                "la_keyvault_url": {
+                    "value": "[parameters('dmp_keyvault_url')]"
+                },
+                "la_recurrence_interval_minutes": {
+                    "value": "[parameters('recurrence_interval_minutes')]"
+                },
+                "la_resource_group_name": {
+                    "value": "[parameters('dmp_resource_group_name')]"
+                },
+                "la_retry_count": {
+                    "value": "[parameters('retry_count')]"
+                },
+                "la_retry_interval_minutes": {
+                    "value": "[parameters('retry_interval_minutes')]"
+                },
+                "la_servicebus_id": {
+                    "value": "[parameters('dmp_servicebus_id')]"
+                },
+                "la_servicebus_name": {
+                    "value": "[parameters('dmp_servicebus_name')]"
+                },
+                "la_sql_db_metastore_id": {
+                    "value": "[parameters('dmp_sql_db_metastore_id')]"
+                },
+                "la_sql_db_metastore_name": {
+                    "value": "[parameters('dmp_sql_db_metastore_name')]"
+                },
+                "la_sql_db_runway_id": {
+                    "value": "[parameters('dmp_sql_db_runway_id')]"
+                },
+				"la_sql_server_runway_id": {
+                    "value": "[parameters('dmp_sql_server_runway_id')]"
+                },
+                "la_sql_db_runway_name": {
+                    "value": "[parameters('dmp_sql_db_runway_name')]"
+                },
+                "la_storage_datalake_id": {
+                    "value": "[parameters('dmp_storage_datalake_id')]"
+                },
+                "la_storage_datalake_name": {
+                    "value": "[parameters('dmp_storage_datalake_name')]"
+                },
+                "la_subscription_id": {
+                    "value": "[parameters('dmp_subscription_id')]"
+                },
+                "la_webhook_url": {
+                    "value": "[parameters('dmp_webhook_url')]"
+                }
+            }
+        }
+    }],
+	"outputs": {
+				"object_id": {
+            "type": "string",
+            "value": "[reference(resourceId('Microsoft.Logic/workflows/', parameters('dmp_logicapp_name')), '2019-05-01', 'Full').Identity.principalId]"
+			
+	}
+}
+}

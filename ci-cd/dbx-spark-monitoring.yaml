@@ -1,0 +1,67 @@
+name: Databricks spark-monitoring.sh update
+
+resources:
+  repositories:
+      - repository: template # Friendly name
+        type: github # Repo type
+        name: krogertechnology/azdo-pipeline-template-dbx-notebook # Repo path
+        endpoint: krogertechnology # Service Connection for GitHub Installation Token
+        ref: refs/heads/main
+
+trigger: none
+    
+variables:
+  databrickstoken: 'AZURE-DATABRICKS-PAT'
+  
+pool:
+  name: Azure Pipelines
+  vmImage: ubuntu-latest
+
+stages:
+
+# Reuse dbx-notebook-build to copy files to the build server
+- stage: Build
+  displayName: 'DBX Monitoring Build'
+  jobs:
+  - template: 'dbx-notebook-build.yaml@template'
+    parameters:
+      Contents: '**/scripts/spark-monitoring.sh'
+      ArtifactName: 'spark-monitoring'
+
+- stage: nonprod
+  displayName: 'DBX Monitoring NonProd'
+  jobs:
+  - template: 'templates/dbx-spark-monitoring-deploy.yaml'
+    parameters:
+      environmentName: Dev
+      uri: 'https://adb-841836083790816.16.azuredatabricks.net'
+      artifactName: 'spark-monitoring'
+      dbxTokenSecretName: ${{ variables.databrickstoken }}
+      keyVaultName: 'dmp-kv-runway-dev-001'
+      azureSubscription: 'DataManagementPlatformNonProd'
+
+- stage: stage
+  displayName: 'DBX Monitoring Stage'
+  condition: or(and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main')), and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/')))
+  jobs:
+  - template: 'templates/dbx-spark-monitoring-deploy.yaml'
+    parameters:
+      environmentName: Stage
+      uri: 'https://adb-6480714072025413.13.azuredatabricks.net'
+      artifactName: 'spark-monitoring'
+      dbxTokenSecretName: ${{ variables.databrickstoken }}
+      keyVaultName: 'dmp-kv-runway-stage-001'
+      azureSubscription: 'DataManagementPlatformProd'
+      
+- stage: prod
+  displayName: 'DBX Monitoring Prod'
+  condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))
+  jobs:
+  - template: 'templates/dbx-spark-monitoring-deploy.yaml'
+    parameters:
+      environmentName: Prod
+      uri: 'https://adb-8187677146320823.3.azuredatabricks.net'
+      artifactName: 'spark-monitoring'
+      dbxTokenSecretName: ${{ variables.databrickstoken }}
+      keyVaultName: 'dmp-kv-runway-prod-001'
+      azureSubscription: 'DataManagementPlatformProd'

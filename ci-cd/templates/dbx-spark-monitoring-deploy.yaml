@@ -1,0 +1,82 @@
+parameters:
+  environmentName: ''
+  artifactName: ''
+  uri: ''
+  dbxTokenSecretName: ''
+  keyVaultName: ''
+  azureSubscription: ''
+  folder: 'spark-monitoring'
+
+jobs:
+- deployment: ${{ replace(parameters.artifactName, '-', '_') }}_${{ parameters.environmentName }}_Deploy
+  displayName: "Deploy spark-monitoring"
+  environment: ${{ parameters.environmentName }}
+  strategy:
+    runOnce:
+      deploy:
+        steps:
+
+        - task: DownloadBuildArtifacts@0
+          displayName: 'Download Build Artifacts'
+          inputs:
+            buildType: 'current'
+            downloadType: 'single'
+            buildVersionToDownload: 'latest'
+            downloadPath: '$(System.ArtifactsDirectory)'
+            artifactName: ${{ parameters.artifactName }}
+
+        - task: UsePythonVersion@0
+          displayName: 'Use Python 3.6'
+          inputs:
+            versionSpec: 3.6
+
+        - task: AzureKeyVault@1
+          displayName: 'Grab DBX token from Keyvault'
+          inputs:
+            azureSubscription: ${{ parameters.azureSubscription }}
+            keyVaultName: ${{ parameters.keyVaultName }}
+            secretsFilter: ${{ parameters.dbxTokenSecretName }}
+            RunAsPreJob: true
+        
+        - task: riserrad.azdo-databricks.azdo-databricks-configuredatabricks.configuredatabricks@0
+          displayName: 'Configure Databricks CLI'
+          inputs:
+            url: ${{ parameters.uri }}
+            token: '$(${{ parameters.dbxTokenSecretName }})'
+
+        - task: AzureCLI@2
+          displayName: Deploy spark-monitoring
+          inputs:
+            azureSubscription: ${{ parameters.azureSubscription }}
+            scriptType: 'bash'
+            scriptLocation: inlineScript
+            inlineScript: |
+              # Log into Databricks CLI
+              databricks configure --token <<EOF
+              ${{ parameters.uri }}
+              $(${{ parameters.dbxTokenSecretName }})
+              EOF
+
+              # Compile spark-monitoring jar files 
+              git clone https://github.com/mspnp/spark-monitoring
+              cd spark-monitoring
+              mvn -f src/pom.xml install -P scala-2.12_spark-3.0.1 -Dmaven.test.skip=true
+
+              # Backup existing spark-monitoring folder
+              echo 'dbfs:/databricks/ BEFORE'
+              dbfs ls -l dbfs:/databricks/
+              dbfs cp -r dbfs:/databricks/${{ parameters.folder }} dbfs:/databricks/${{ parameters.folder }}_`date +"%Y%m%d%H%M%S"`
+              echo 'dbfs:/databricks/ AFTER'
+              dbfs ls -l dbfs:/databricks/
+
+              # Copy new jar files to databricks file system
+              dbfs mkdirs dbfs:/databricks/${{ parameters.folder }}/
+              dbfs cp --overwrite src/target/spark-listeners_3.0.1_2.12-1.0.0.jar dbfs:/databricks/${{ parameters.folder }}/
+              dbfs cp --overwrite src/target/spark-listeners-loganalytics_3.0.1_2.12-1.0.0.jar dbfs:/databricks/${{ parameters.folder }}/
+
+              # Copy spark-monitoring.sh to databricks file system
+              dbfs cp --overwrite $(System.ArtifactsDirectory)/${{ parameters.artifactName }}/spark-monitoring.sh dbfs:/databricks/${{ parameters.folder }}/spark-monitoring.sh
+
+              # List contents of new spark-monitoring folder
+              echo 'dbfs:/databricks/${{ parameters.folder }}'
+              dbfs ls -l dbfs:/databricks/${{ parameters.folder }}/

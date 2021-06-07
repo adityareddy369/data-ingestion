@@ -1,0 +1,87 @@
+parameters:
+  environment: ''
+  dependsOn: ''
+  condition: succeeded()
+  azureSubscription: ''
+  vnetName: ''
+  subnetName: ''
+  webhookConnection: []
+
+stages:
+- stage: ${{ parameters.environment }}
+  dependsOn: ${{ parameters.dependsOn }}
+  jobs:
+  - job: BuildImage
+    condition: ${{ parameters.condition }}
+    steps:
+    - task: AzureCLI@2
+      displayName: Create new machine image
+      inputs:
+        workingDirectory: $(System.DefaultWorkingDirectory)/scripts
+        azureSubscription: ${{ parameters.azureSubscription }}
+        addSpnToEnvironment: true
+        scriptType: bash
+        scriptLocation: inlineScript
+        inlineScript: |
+          # Prefix env variable with "PKR_VAR_" for packer to use automatically
+          export PKR_VAR_CLIENT_ID=$servicePrincipalId
+          export PKR_VAR_CLIENT_SECRET=$servicePrincipalKey
+          export PKR_VAR_SUBSCRIPTION_ID=$(az account show --query id | xargs)
+          export PKR_VAR_TENANT_ID=$(az account show --query tenantId | xargs)
+
+          # Temp vault for packer to store WinRM cert
+          vault_id=packer-temp-$(date +%s)
+          az keyvault create --location eastus2 --name $vault_id \
+            --resource-group networking-eastus2 --enable-purge-protection \
+            --enable-soft-delete --enabled-for-deployment --enabled-for-template-deployment
+
+          pip install pywinrm
+          packer build -force -var "vault_id=$vault_id" -var "vnet_name=${{ parameters.vnetName }}" \
+            -var "subnet_name=${{ parameters.subnetName }}" adf-integration-image.pkr.hcl
+
+          # Packer fails to delete OS disk; manually deleting all unattached disks
+          az disk delete --yes --ids $(az disk list -g networking-eastus2 --query '[?managedBy==`null`].[id]' -o tsv)
+          az keyvault delete -g networking-eastus2 -n $vault_id
+
+  - job: '${{ parameters.environment }}_Notify'
+    pool: server
+    dependsOn: BuildImage
+    steps:
+    - ${{ each webhookConnection in parameters.webhookConnection }}:
+      - task: InvokeRESTAPI@1
+        displayName: Send webhook notification
+        inputs:
+          connectionType: connectedServiceName
+          serviceConnection: ${{ webhookConnection.webhookServiceConnection }}
+          method: POST
+          urlSuffix: ${{ webhookConnection.urlSuffix }}
+          waitForCompletion: false
+          body: |
+            {
+              "@type": "MessageCard",
+              "@context": "http://schema.org/extensions",
+              "themeColor": "0076D7",
+              "summary": "Webhook to send message to team channel",
+              "sections": [{
+                "activityTitle": "Successful Pipeline Run",
+                "facts": [{
+                    "name": "Repository Name",
+                    "value": "$(Build.Repository.Name)"
+                  },
+                  {
+                    "name": "Branch Name",
+                    "value": "$(Build.SourceBranchName)"
+                  },
+                  {
+                    "name": "Run By",
+                    "value": "$(Build.RequestedFor)"
+                  },
+                  {
+                    "name": "Last Commit Details",
+                    "value": "$(Build.SourceVersionMessage)"
+                  }
+                ],
+                "markdown": "true"
+              }],
+              "title": "pipeline DMP $(Build.DefinitionName) completed in ${{ parameters.environment }}"
+            }

@@ -1,0 +1,61 @@
+name: 'Validate feature'
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - 'feature/**'
+      - 'hotfix/**'
+      - 'fix/**'
+    paths-ignore:
+      - 'Docs/**'
+
+jobs:
+  terraform:
+    name: 'Validate and plan deploy'
+    environment: NonProd
+    runs-on: [self-hosted,tsa]
+    strategy:
+      matrix:
+        stage: ['dev', 'build']
+      fail-fast: false
+    defaults:
+      run:
+        shell: bash
+        working-directory: terraform
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+      ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
+      ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+      ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+      ServiceConnection: 'svc-5839-dmp-runway-build-d'
+      StorageAccountName: 'dmptfstate1'
+      ContainerName: 'tfstate'
+      Key: 'krogertechnology.dmp-enterprise-data-lake-${{ matrix.stage }}.terraform.tfstate'
+      ResourceGroupName: 'terraform'
+      VarsFile: ./variables/${{ matrix.stage }}.tfvars
+      dir: terraform
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: 0.14.11
+
+      - name: Checkout remote 
+        uses: actions/checkout@v2
+        with: 
+          persist-credentials: false
+          repository: krogertechnology/GHA_RemoteAction
+          token: ${{ secrets.GH_TOKEN }}
+          path: ./.github/template-action
+          
+      - name: Run Terraform
+        uses: ./.github/template-action/terraform/
+        with:
+          work-dir: ${{ env.dir }}
+
+      

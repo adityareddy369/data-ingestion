@@ -4,7 +4,7 @@ trigger: none
 
 pool:
   name: Core Engineering
-  vmImage: ubuntu-latest
+  run-as: ubuntu-latest
 
 # - If this pipeline is canceled, Packer may leave behind extra resources.
 #   These can be identified by prefix "pkr..." and manually deleted

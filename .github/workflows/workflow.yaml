@@ -43,13 +43,8 @@ jobs:
 
     # Show paths
     - name: Show paths
-      run: ls -R
-    - uses: jfrog/setup-jfrog-cli@v1
-    - run: jfrog --version
-    run: |
-      jfrog rt dl artifacts/
-      jfrog rt u aether artifacts/
-      jfrog rt bp
+    run: ls -R
+  
 
     # Show the environment variables for debugging
     #- name: Display Environment Variable
@@ -63,11 +58,16 @@ jobs:
      # run: ls -R
 
     # Publish Artifact: adf_publish files
-    - name: 'Publish Artifact: adf_publish' 
-      uses: actions/upload-artifact@v2
-      with:
-        name: 'Publish-Files'
-        path: '${{ github.workspace }}/${{ github.event.inputs.ADF_PUBLISH_FOLDER }}'
+    
+    name: jfrog/setup-jfrog-cli@v1
+      run:jfrog --version
+      run:|
+        jfrog rt dl artifacts/
+        jfrog rt u aether artifacts/
+        jfrog rt bp
+      with
+        name:'Publish-Files'
+        path:'${{ github.workspace }}/${{ github.event.inputs.ADF_PUBLISH_FOLDER }}'
 
 
         

@@ -43,7 +43,7 @@ jobs:
 
     # Show paths
     - name: Show paths
-    run: ls -R
+      run: ls -R
   
 
     # Show the environment variables for debugging

@@ -12,7 +12,7 @@ on:
 
       # Name of the publish folder under adf_publish bnrach
       ADF_PUBLISH_FOLDER:
-        description: 'ADF Publish Folder Name in Git (under adf_publish branch)'
+        description: 'ADF Publish Folder Name in Git (under adf_publish main)'
         required: true
         default: 'ADF-MyADFProject-{REPLACE-ME e.g. Feature-A}'
 

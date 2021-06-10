@@ -15,7 +15,7 @@ resources:
     ref: refs/heads/main 
 
 
-trigger: # Runs pipelines when changes occur to a branch, generally the result of push or a merge
+run on: # Runs pipelines when changes occur to a branch, generally the result of push or a merge
 
   batch: "true" # Prevents multiple pipeline runs at the same time
 

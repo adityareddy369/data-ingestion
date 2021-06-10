@@ -46,12 +46,12 @@ jobs:
       run: ls -R
 
     # Show the environment variables for debugging
-    - name: Display Environment Variable
-      uses: azure/powershell@v1
-      with:
-        inlineScript: |
-          dir env:
-        azPSVersion: '3.1.0'
+    #- name: Display Environment Variable
+     # uses: azure/powershell@v1
+      #with:
+       # inlineScript: |
+        #  dir env:
+        #azPSVersion: '3.1.0'
 
     # Publish Artifact: Publish: ARM-Templates
     - name: 'Publish Artifact: ARM-Templates' 

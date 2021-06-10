@@ -73,8 +73,8 @@ jobs:
         ref: adf_publish
 
     # Show paths
-    - name: Show paths
-      run: ls -R
+    #- name: Show paths
+     # run: ls -R
 
     # Publish Artifact: adf_publish files
     - name: 'Publish Artifact: adf_publish' 

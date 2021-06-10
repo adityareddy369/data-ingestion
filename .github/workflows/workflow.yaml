@@ -52,26 +52,6 @@ jobs:
        # inlineScript: |
         #  dir env:
         #azPSVersion: '3.1.0'
-
-    # Publish Artifact: Publish: ARM-Templates
-    - name: 'Publish Artifact: ARM-Templates' 
-      uses: actions/upload-artifact@v2
-      with:
-        name: 'ARM-Templates'
-        path: '${{ github.workspace }}/ARM-Templates'
-
-    # Publish Artifact: Publish: PowerShell-Scripts
-    - name: 'Publish Artifact: PowerShell-Scripts' 
-      uses: actions/upload-artifact@v2
-      with:
-        name: 'PowerShell-Scripts'
-        path: '${{ github.workspace }}/PowerShell-Scripts'
-
-    - name: Checkout adf_publish branch
-      uses: actions/checkout@v2
-      with:
-        ref: adf_publish
-
     # Show paths
     #- name: Show paths
      # run: ls -R

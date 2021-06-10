@@ -44,8 +44,12 @@ jobs:
     # Show paths
     - name: Show paths
       run: ls -R
-  
-
+    - run: cp -r scripts ${{ github.workspace }}/${{ github.event.inputs.ADF_PUBLISH_FOLDER }}
+    - name: Publish Artifact Notebook
+      uses: actions/upload-artifact@v2
+      with:
+         name: Artifact
+         path: ${{ github.workspace }}/${{ github.event.inputs.ADF_PUBLISH_FOLDER }}
     # Show the environment variables for debugging
     #- name: Display Environment Variable
      # uses: azure/powershell@v1
@@ -59,15 +63,15 @@ jobs:
 
     # Publish Artifact: adf_publish files
     
-    name: jfrog/setup-jfrog-cli@v1
-      run:jfrog --version
-      run:|
-        jfrog rt dl artifacts/
-        jfrog rt u aether artifacts/
-        jfrog rt bp
-      with
-        name:'Publish-Files'
-        path:'${{ github.workspace }}/${{ github.event.inputs.ADF_PUBLISH_FOLDER }}'
+#     name: jfrog/setup-jfrog-cli@v1
+#       run:jfrog --version
+#       run:|
+#         jfrog rt dl artifacts/
+#         jfrog rt u aether artifacts/
+#         jfrog rt bp
+#       with
+#         name:'Publish-Files'
+#         path:'${{ github.workspace }}/${{ github.event.inputs.ADF_PUBLISH_FOLDER }}'
 
 
         

@@ -95,7 +95,7 @@ jobs:
     - name: 'Download Artifact: ARM-Templates' 
       uses: actions/download-artifact@v2
       with:
-        name: 'ARM-Templates'
+        name: Artifact
         path: ${{ github.workspace }}/ARM-Templates
 
     # Download Artifact:PowerShell-Scripts

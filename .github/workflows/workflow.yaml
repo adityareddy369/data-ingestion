@@ -99,18 +99,18 @@ jobs:
         path: ${{ github.workspace }}/ARM-Templates
 
     # Download Artifact:PowerShell-Scripts
-    - name: 'Download Artifact: PowerShell-Scripts' 
-      uses: actions/download-artifact@v2
-      with:
-        name: 'PowerShell-Scripts'
-        path: ${{ github.workspace }}/PowerShell-Scripts
+#     - name: 'Download Artifact: PowerShell-Scripts' 
+#       uses: actions/download-artifact@v2
+#       with:
+#         name: 'PowerShell-Scripts'
+#         path: ${{ github.workspace }}/PowerShell-Scripts
 
     # Download Artifact: Publish-Files
-    - name: 'Download Artifact: Publish-Files' 
-      uses: actions/download-artifact@v2
-      with:
-        name: 'Publish-Files'
-        path: ${{ github.workspace }}/Publish-Files
+#     - name: 'Download Artifact: Publish-Files' 
+#       uses: actions/download-artifact@v2
+#       with:
+#         name: 'Publish-Files'
+#         path: ${{ github.workspace }}/Publish-Files
 
     # Login to Azure
     - name: Login via Az module
